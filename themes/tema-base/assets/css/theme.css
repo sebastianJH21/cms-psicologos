@@ -1,0 +1,17 @@
+:root {
+    --color-primary: #976147;
+    --color-secondary: #5b4034;
+    --color-accent: #c0a090;
+    --color-bg: #f6f2f0;
+    --color-bg-alt: #f1ece9;
+    --color-text: #1a1414;
+    --color-text-light: #736b6b;
+    --color-border: #e8e7e7;
+    --color-white: #ffffff;
+    --color-hero-bg: #f1ece9;
+    --color-nav-bg: #ffffff;
+    --font-heading: 'Castoro', Georgia, serif;
+    --font-body: 'Lexend', 'Montserrat', sans-serif;
+    --border-radius: 1.2rem;
+    --shadow: 0 4px 24px rgba(91, 64, 52, 0.10);
+}

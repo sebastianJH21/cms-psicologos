@@ -1,0 +1,29 @@
+/* Rosa Suave — overrides sobre las variables de tema-base/styles.css */
+:root {
+    --color-primary:   #c0687e;
+    --color-orange:    #8e44ad;
+    --color-orange2:   #f0aab5;
+    --color-orange3:   #c0687e;
+    --color-orange4:   #fde8ee;
+    --color-orange5:   #f0aab5;
+    --color-orange6:   #f0aab5;
+    --color-orange7:   #c0687e;
+
+    --color-brown:     #8e44ad;
+    --color-brown2:    #8e44ad;
+    --color-brown3:    #a85dbf;
+
+    --color-white:     #fff5f8;
+    --color-white3:    #fde8ee;
+    --color-white4:    #fde8ee;
+    --color-white5:    #f5d3dc;
+    --color-white10:   #fff5f8;
+    --color-white11:   #fde8ee;
+
+    --color-black:     #3d1f29;
+    --color-black4:    #2a1020;
+
+    --color-gray2:     #7a4056;
+
+    --font-heading: 'Castoro', Georgia, serif;
+}

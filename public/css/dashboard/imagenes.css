@@ -1,0 +1,116 @@
+/* =========================================================
+   IMÁGENES PÚBLICAS — Dashboard
+   ========================================================= */
+
+.imagenes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(36rem, 1fr));
+    gap: 2.4rem;
+}
+
+.imagen-slot {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Preview */
+.imagen-slot__preview {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: var(--color-surface-soft);
+    overflow: hidden;
+}
+
+.imagen-slot__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s;
+}
+
+.imagen-slot:hover .imagen-slot__img {
+    transform: scale(1.03);
+}
+
+.imagen-slot__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--color-text-subtle);
+    font-size: 1.3rem;
+}
+
+.imagen-slot__placeholder i {
+    font-size: 3.6rem;
+}
+
+.imagen-slot__badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: .4rem 1rem;
+    border-radius: 10rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+/* Info */
+.imagen-slot__info {
+    padding: 1.6rem 2rem 1rem;
+}
+
+.imagen-slot__label {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.imagen-slot__hint {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+/* Actions */
+.imagen-slot__actions {
+    padding: 0 2rem 2rem;
+    display: flex;
+    gap: .8rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.imagen-slot__upload-label {
+    position: relative;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.imagen-slot__file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .imagenes-grid {
+        grid-template-columns: 1fr;
+    }
+}

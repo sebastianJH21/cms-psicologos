@@ -1,0 +1,17 @@
+{
+    "slug": "tema-warm",
+    "name": "Arena Cálida",
+    "description": "Tonos terracotta, beige y crema. Acogedor, natural y reconfortante. Inspirado en la calidez del hogar.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#b86945",
+        "secondary": "#d8a778",
+        "accent": "#f5e1c6",
+        "bg": "#faf3ea",
+        "bg_alt": "#f0e2cd",
+        "text": "#3a261a",
+        "text_light": "#7a5a45"
+    },
+    "image_slots": ["hero", "sobre-mi", "blog-bg"],
+    "preview_colors": ["#b86945", "#d8a778", "#f5e1c6", "#faf3ea"]
+}

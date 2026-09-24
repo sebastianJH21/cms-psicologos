@@ -1,0 +1,17 @@
+{
+    "slug": "tema-modern",
+    "name": "Moderno Púrpura",
+    "description": "Diseño contemporáneo en violeta y lavanda. Proyecta modernidad, creatividad y confianza.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#6c5ce7",
+        "secondary": "#a29bfe",
+        "accent": "#fd79a8",
+        "bg": "#f8f7ff",
+        "bg_alt": "#ede9ff",
+        "text": "#2d3436",
+        "text_light": "#636e72"
+    },
+    "image_slots": ["hero", "sobre-mi", "servicios-bg", "blog-bg"],
+    "preview_colors": ["#6c5ce7", "#a29bfe", "#fd79a8", "#f8f7ff"]
+}

@@ -1,0 +1,203 @@
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 1.6rem;
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card__icon {
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.stat-card__icon--primary {
+    background: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+}
+
+.stat-card__icon--success {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+}
+
+.stat-card__icon--warning {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+
+.stat-card__icon--info {
+    background: var(--color-info-soft);
+    color: var(--color-info);
+}
+
+.stat-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.stat-card__label {
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.stat-card__value {
+    font-size: 2.4rem;
+    color: var(--color-text);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-card__hint {
+    font-size: 1.1rem;
+    color: var(--color-text-subtle);
+    font-style: italic;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.6rem;
+}
+
+.panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.panel--soft {
+    background: var(--color-surface-soft);
+    border-style: dashed;
+    box-shadow: none;
+}
+
+.panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.panel__title {
+    font-size: 1.6rem;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.panel__link {
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.panel__link[aria-disabled="true"] {
+    color: var(--color-text-subtle);
+    cursor: not-allowed;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.availability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.availability-list__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--color-border);
+    font-size: 1.4rem;
+    min-height: 4.4rem;
+}
+
+.availability-list__item:last-child {
+    border-bottom: 0;
+}
+
+.availability-list__day {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.availability-list__range {
+    color: var(--color-text-muted);
+    font-size: 1.3rem;
+    background: var(--color-surface-soft);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+}
+
+.availability-list__range--off {
+    color: var(--color-text-subtle);
+    font-style: italic;
+    background: transparent;
+    padding: 0;
+    opacity: 0.5;
+}
+
+.availability-tabs {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+}
+
+.availability-tabs__btn {
+    background: none;
+    border: 0;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.availability-tabs__btn:hover {
+    color: var(--color-primary);
+}
+
+.availability-tabs__btn--active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.availability-list { display: none; }
+.availability-list--active { display: flex; }

@@ -1,0 +1,225 @@
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 20, 35, 0.5);
+}
+
+.modal__dialog {
+    position: relative;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 44rem;
+    overflow: hidden;
+    animation: modalIn 0.15s ease-out;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.6rem) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.6rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modal__title {
+    font-size: 1.6rem;
+}
+
+.modal__close {
+    background: transparent;
+    border: 0;
+    color: var(--color-text-muted);
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 0.4rem;
+}
+
+.modal__body {
+    padding: 1.8rem 2rem;
+}
+
+.modal__text {
+    font-size: 1.4rem;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.modal__footer {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    padding: 1.4rem 2rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface-soft);
+}
+
+/* =========================================================
+   MODAL TEMA DASHBOARD (dark/light + color)
+   ========================================================= */
+
+.modal-tema {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.55);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modal-tema:not([hidden]) {
+    display: flex;
+}
+
+.modal-tema__inner {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 52rem;
+    padding: 2.8rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-tema__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.4rem;
+}
+
+.modal-tema__title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.modal-tema__section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 1.2rem;
+}
+
+.tema-mode-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2.8rem;
+}
+
+.tema-mode-btn {
+    position: relative;
+}
+
+.tema-mode-btn input[type="radio"] {
+    display: none;
+}
+
+.tema-mode-btn__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .8rem;
+    padding: 2rem 1.6rem;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    text-align: center;
+}
+
+.tema-mode-btn__label:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+}
+
+.tema-mode-btn input[type="radio"]:checked + .tema-mode-btn__label {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+.tema-mode-btn__icon {
+    font-size: 2.4rem;
+}
+
+.tema-mode-btn__text {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.color-swatches {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.8rem;
+}
+
+.color-swatch {
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    position: relative;
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 4px rgba(0,0,0,.12);
+}
+
+.color-swatch--selected {
+    border-color: var(--color-text);
+    transform: scale(1.1);
+}
+
+.color-swatch--selected::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,.4);
+}
+
+.modal-tema__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}

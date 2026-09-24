@@ -1,0 +1,547 @@
+.citas-filtros {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 0.9fr 0.9fr auto auto;
+    gap: 1.2rem;
+    align-items: end;
+}
+
+.citas-tabs {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+}
+
+.citas-tab {
+    appearance: none;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    padding: 0.8rem 1.4rem;
+    border-radius: 999rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.citas-tab:hover {
+    transform: translateY(-1px);
+    background: var(--color-surface-soft);
+}
+
+.citas-tab.is-active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.citas-tab--past {
+    border-color: rgba(199, 122, 60, 0.4);
+    color: rgba(199, 122, 60, 1);
+}
+
+.citas-tab--past:hover {
+    background: rgba(199, 122, 60, 0.08);
+}
+
+.citas-tab--past.is-active {
+    background: #c77a3c;
+    border-color: #c77a3c;
+    color: #fff;
+}
+
+.citas-filtros__actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: nowrap;
+}
+
+.cita-form { display: flex; flex-direction: column; gap: 2rem; }
+
+/* Modal de slots disponibles */
+.cita-slots-modal {
+    position: fixed; inset: 0; z-index: 1100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+}
+.cita-slots-modal[hidden] { display: none; }
+.cita-slots-modal__backdrop {
+    position: absolute; inset: 0;
+    background: rgba(20, 24, 35, 0.55);
+}
+.cita-slots-modal__box {
+    position: relative; z-index: 1;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%; max-width: 78rem; max-height: 90vh;
+    display: flex; flex-direction: column; overflow: hidden;
+}
+.cita-slots-modal__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.6rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+}
+.cita-slots-modal__header h3 { font-size: 1.6rem; margin: 0; }
+.cita-slots-modal__body {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    overflow-y: auto;
+}
+.cita-slots-modal__cal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+.cita-slots-modal__cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.4rem;
+    font-size: 1.2rem;
+}
+.cita-slots-modal__cal-grid .cal-dia-cab {
+    text-align: center; font-weight: 600; color: var(--color-text-muted);
+    padding: 0.4rem 0;
+}
+.cita-slots-modal__cal-grid .cal-dia {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm);
+    color: #9ca3af;
+    background: #f3f4f6;
+    border: 1px solid transparent;
+    font-size: 1.2rem;
+}
+[data-theme="dark"] .cita-slots-modal__cal-grid .cal-dia {
+    color: #4b5563;
+    background: #1f2937;
+}
+.cita-slots-modal__cal-grid .cal-dia--disponible {
+    cursor: pointer;
+    background: #d1fae5;
+    color: #065f46;
+    font-weight: 600;
+    border-color: #6ee7b7;
+    transition: all 0.15s ease;
+}
+[data-theme="dark"] .cita-slots-modal__cal-grid .cal-dia--disponible {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #059669;
+}
+.cita-slots-modal__cal-grid .cal-dia--disponible:hover {
+    background: #059669;
+    color: #fff;
+    border-color: #059669;
+}
+.cita-slots-modal__cal-grid .cal-dia--seleccionado {
+    background: #059669 !important;
+    color: #fff !important;
+    border-color: #047857 !important;
+}
+.cita-slots-modal__cal-grid .cal-dia--fuera { visibility: hidden; }
+.cita-slots-modal__slots-hint { color: var(--color-text-muted); font-size: 1.3rem; margin-bottom: 1rem; }
+.cita-slots-modal__slots-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 0.6rem;
+    max-height: 36rem;
+    overflow-y: auto;
+}
+.cita-slots-modal__slots-list .slot-btn {
+    padding: 0.8rem;
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.15s ease;
+}
+.cita-slots-modal__slots-list .slot-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+@media (max-width: 700px) {
+    .cita-slots-modal__body {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cita-form__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem 1.8rem;
+}
+
+@media (max-width: 900px) {
+    .cita-form__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .cita-form__grid { grid-template-columns: 1fr; }
+}
+
+.cita-show {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+    gap: 1.6rem;
+}
+
+.cita-show__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 0;
+}
+
+.cita-show__list dt {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+}
+
+.cita-show__list dd { margin: 0; font-size: 1.5rem; color: var(--color-text); }
+
+.cita-show__text {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cita-show__text--muted { color: var(--color-text-muted); }
+
+.cita-show__hint {
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    background: var(--color-surface-soft);
+    border-left: 3px solid var(--color-info);
+    border-radius: var(--radius-sm);
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+}
+
+.cita-show__link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s;
+}
+
+.cita-show__link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: none !important;
+}
+
+.cita-show__link--wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color:  #189144;
+    border-radius: 3px;
+    padding: 0.5rem;
+    color: white;
+    margin-top: 0.5rem;
+    text-decoration: none;
+}
+
+.cita-show__link--wa:hover {
+    background-color: #137236;
+    color: white;
+}
+
+/* ── Celda de teléfono del listado: badges apilados ────────────────────────── */
+.cita-tel-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.cita-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none !important;
+    transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.cita-badge--tel {
+    background: var(--color-info-soft);
+    color: var(--color-info);
+}
+
+.cita-badge--tel:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.cita-badge--wa {
+    background: #189144;
+    color: #fff;
+}
+
+.cita-badge--wa > .fa-whatsapp{
+    color: white;
+}
+
+.cita-badge--wa:hover {
+    background: #137236;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+}
+
+.cita-badge--muted {
+    background: var(--color-surface-soft);
+    color: var(--color-text-muted);
+}
+
+/* ── Badge de estado clicable (toggle asíncrono) ───────────────────────────── */
+.cita-estado-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.cita-estado-toggle__ico {
+    font-size: 1.1rem;
+    opacity: 0.65;
+    transition: transform 0.45s ease, opacity 0.15s ease;
+}
+
+.cita-estado-toggle:hover {
+    filter: brightness(0.96);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+    transform: translateY(-1px);
+}
+
+.cita-estado-toggle:hover .cita-estado-toggle__ico {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
+.cita-estado-toggle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.cita-estado-toggle--loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.cita-estado-toggle--loading .cita-estado-toggle__ico {
+    animation: cita-estado-spin 0.7s linear infinite;
+}
+
+.cita-estado-toggle--error {
+    outline: 2px solid var(--color-danger);
+    outline-offset: 2px;
+}
+
+@keyframes cita-estado-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cita-datos-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+.cita-dato-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.1rem;
+    background: var(--color-surface-soft);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 999rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+a.cita-dato-badge:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.cita-dato-badge--plain {
+    cursor: default;
+}
+
+.cita-dato-badge--wa {
+    background-color: #189144;
+    color: #fff;
+    border-color: #189144;
+}
+
+a.cita-dato-badge--wa:hover {
+    background-color: #137236;
+    color: #fff;
+    border-color: #137236;
+}
+
+.data-table__sub {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.data-table__wrapper { overflow-x: auto; }
+
+.btn--icon-danger { color: var(--color-danger); }
+.btn--icon-danger:hover { background: rgba(216, 76, 76, 0.1); }
+
+.btn--sm { padding: 0.4rem 0.8rem; font-size: 1.2rem; }
+
+.pagination { margin-top: 1.6rem; display: flex; justify-content: center; }
+.pagination nav { display: flex; gap: 0.4rem; }
+.pagination svg { width: 1.6rem; height: 1.6rem; }
+
+.page-header__actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+.empty-state .btn { margin-top: 1.2rem; }
+
+.tabla-citas--loading {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.15s;
+}
+
+@media (max-width: 1100px) {
+    .citas-filtros {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .citas-filtros {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Campo bloqueado al vincular paciente existente */
+.form-input--locked,
+input.form-input--locked,
+input[readonly].form-input--locked {
+    background: var(--color-surface-soft) !important;
+    color: var(--color-text-muted) !important;
+    border-style: dashed !important;
+    cursor: not-allowed;
+    user-select: none;
+}
+
+/* ── Animación "Ver huecos disponibles" ───────────────────────────────────── */
+@keyframes huecos-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+    55%       { box-shadow: 0 0 0 5px transparent; }
+}
+.btn-huecos-anim {
+    animation: huecos-pulse 7s ease-out infinite;
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+.btn-huecos-anim:hover {
+    animation: none;
+}
+
+/* ── Fila de botones de fecha (form cita) ─────────────────────────────────── */
+.cita-fecha-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+/* ── Hint aviso campo bloqueado ──────────────────────────────────────────── */
+.fecha-hint-aviso {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--color-primary);
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
+/* Picker de disponibilidad para nueva cita manual */
+.cita-disponibilidad {
+    margin-top: 1rem;
+    padding: 1.4rem;
+    background: var(--color-surface-soft, #f6f2f0);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 1.2rem);
+}
+.cita-disponibilidad__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; gap: 1rem;
+}
+.cita-disponibilidad__dias,
+.cita-disponibilidad__slots {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+}
+.cita-disponibilidad__dia,
+.cita-disponibilidad__slot {
+    padding: 0.6rem 1.2rem;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 999rem;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+}
+.cita-disponibilidad__dia:hover,
+.cita-disponibilidad__slot:hover {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+.cita-disponibilidad__dia.is-active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+.cita-disponibilidad__slots {
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--color-border);
+}
+.cita-disponibilidad__empty,
+.cita-disponibilidad__empty-slots {
+    color: var(--color-text-muted);
+    font-size: 1.3rem;
+    margin: 0;
+}

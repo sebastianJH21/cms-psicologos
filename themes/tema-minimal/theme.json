@@ -1,0 +1,17 @@
+{
+    "slug": "tema-minimal",
+    "name": "Minimalista",
+    "description": "Diseño limpio y elegante en blanco y gris. Transmite profesionalidad y claridad.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#2c3e50",
+        "secondary": "#34495e",
+        "accent": "#95a5a6",
+        "bg": "#ffffff",
+        "bg_alt": "#f4f6f7",
+        "text": "#2c3e50",
+        "text_light": "#7f8c8d"
+    },
+    "image_slots": ["hero", "sobre-mi", "servicios-bg", "blog-bg"],
+    "preview_colors": ["#2c3e50", "#34495e", "#95a5a6", "#ffffff"]
+}

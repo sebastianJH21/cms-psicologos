@@ -1,0 +1,181 @@
+/* =========================================================
+   TEMA OSCURO — Dashboard
+   Activado con: html[data-theme="dark"]
+   ========================================================= */
+
+[data-theme="dark"] {
+    --color-bg: #111827;
+    --color-surface: #1f2937;
+    --color-surface-soft: #253246;
+    --color-border: #374151;
+    --color-border-strong: #4b5563;
+    --color-text: #f3f4f6;
+    --color-text-muted: #9ca3af;
+    --color-text-subtle: #6b7280;
+
+    --color-primary-soft: #2a3548;
+
+    --color-success-soft: #052e16;
+    --color-warning-soft: #1c1200;
+    --color-info-soft: #0a1e2f;
+    --color-danger-soft: #1e0a0a;
+}
+
+/* Sidebar dark */
+[data-theme="dark"] .sidebar {
+    background: #1a2236;
+    border-right-color: #2d3748;
+}
+
+[data-theme="dark"] .sidebar__logo {
+    border-bottom-color: #2d3748;
+}
+
+[data-theme="dark"] .sidebar__nav-item a {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .sidebar__nav-item a:hover,
+[data-theme="dark"] .sidebar__nav-item a:focus {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+}
+
+[data-theme="dark"] .sidebar__nav-item--active > a {
+    background: rgba(255,255,255,.1) !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .sidebar__sublink--active {
+    color: #fff !important;
+    font-weight: 600;
+}
+
+/* Topbar dark */
+[data-theme="dark"] .topbar {
+    background: #1f2937;
+    border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .topbar__search-input {
+    background: #253246;
+    color: #f3f4f6;
+    border-color: #374151;
+}
+
+[data-theme="dark"] .topbar__user-avatar {
+    background: var(--color-primary);
+}
+
+/* Panel dark */
+[data-theme="dark"] .panel {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+/* Table dark */
+[data-theme="dark"] .data-table th {
+    background: #253246;
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .data-table td {
+    border-color: #374151;
+}
+
+[data-theme="dark"] .data-table tr:hover td {
+    background: rgba(255,255,255,.03);
+}
+
+/* Input dark */
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+    background: #253246;
+    color: #f3f4f6;
+    border-color: #374151;
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+    border-color: var(--color-primary);
+}
+
+/* Modal dark */
+[data-theme="dark"] .modal__dialog {
+    background: #1f2937;
+}
+
+/* Flash dark */
+[data-theme="dark"] .flash {
+    background: var(--color-surface-soft);
+}
+
+/* Historia resumen timeline: hover legible */
+[data-theme="dark"] a.historia-resumen-item:hover,
+[data-theme="dark"] .historia-resumen-item:hover {
+    background: #253246 !important;
+}
+[data-theme="dark"] a.historia-resumen-item:hover .historia-resumen-item__titulo,
+[data-theme="dark"] a.historia-resumen-item:hover .historia-resumen-item__excerpt,
+[data-theme="dark"] a.historia-resumen-item:hover .historia-resumen-item__dia,
+[data-theme="dark"] a.historia-resumen-item:hover .historia-resumen-item__mes {
+    color: var(--color-text) !important;
+}
+
+/* Notificaciones nuevas: fondo y texto legibles */
+[data-theme="dark"] .notif-list__item--new {
+    background: #1e2d42;
+    color: var(--color-text);
+}
+[data-theme="dark"] .notif-list__item--new .notif-list__title,
+[data-theme="dark"] .notif-list__item--new .notif-list__meta {
+    color: var(--color-text);
+}
+
+/* Email tutorial nota legible */
+[data-theme="dark"] .email-tutorial__note {
+    background: #1e2d42;
+    color: var(--color-text);
+}
+[data-theme="dark"] .email-tutorial__note p,
+[data-theme="dark"] .email-tutorial__note span,
+[data-theme="dark"] .email-tutorial__note strong {
+    color: var(--color-text);
+}
+
+/* Editor Jodit: fondo y texto legibles en modo oscuro */
+[data-theme="dark"] .jodit-container,
+[data-theme="dark"] .jodit-wysiwyg,
+[data-theme="dark"] .jodit-workplace {
+    background: #1f2937 !important;
+    color: #f3f4f6 !important;
+}
+[data-theme="dark"] .jodit-container .jodit-wysiwyg * {
+    color: #f3f4f6;
+}
+[data-theme="dark"] .jodit-toolbar__box {
+    background: #f0f4f8 !important;
+    border-color: #d1d9e0 !important;
+}
+[data-theme="dark"] .jodit-toolbar-button__button {
+    color: #374151 !important;
+}
+[data-theme="dark"] .jodit-toolbar-button__button:hover {
+    background: rgba(0,0,0,0.08) !important;
+}
+[data-theme="dark"] .jodit-toolbar-button__trigger {
+    color: #374151 !important;
+}
+[data-theme="dark"] .jodit-ui-separator {
+    border-color: #c5cdd6 !important;
+}
+[data-theme="dark"] .jodit-status-bar {
+    background: #253246 !important;
+    color: #9ca3af !important;
+    border-color: #374151 !important;
+}
+[data-theme="dark"] .jodit-container:not(.jodit_inline) {
+    border-color: #374151 !important;
+}

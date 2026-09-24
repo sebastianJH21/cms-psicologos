@@ -1,0 +1,583 @@
+/* ── Botones de fecha en modal calendario (columna) ─────────────────────────── */
+.cal-fecha-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+}
+.cal-fecha-botones--col {
+    flex-direction: row;
+    align-items: stretch;
+}
+.cal-btn-grande {
+    padding: 1rem 1.4rem;
+    font-size: 1.35rem;
+    min-height: 4rem;
+}
+.cal-fecha-grande {
+    min-height: 4.4rem;
+    font-size: 1.4rem;
+    padding: 0.9rem 1.2rem;
+}
+
+/* ── Buscador de pacientes en modal nueva cita ───────────────────────────────── */
+#cal-form .form__field {
+    position: relative;
+}
+.cal-paciente-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    max-height: 24rem;
+    overflow-y: auto;
+}
+.cal-paciente-dropdown[hidden] { display: none; }
+.cal-paciente-dropdown__item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.9rem 1.2rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.3rem;
+    color: var(--color-text);
+    border-top: 1px solid var(--color-border);
+}
+.cal-paciente-dropdown__item:first-child { border-top: 0; }
+.cal-paciente-dropdown__item:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+.cal-paciente-dropdown__item-nombre { display: block; font-weight: 600; }
+.cal-paciente-dropdown__item-meta {
+    display: block; font-size: 1.15rem; color: var(--color-text-muted);
+    margin-top: 0.2rem;
+}
+.cal-paciente-dropdown__empty {
+    padding: 1.2rem;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 1.3rem;
+}
+.cal-paciente-seleccionado {
+    margin-top: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: var(--color-success-soft);
+    color: var(--color-success);
+    border-radius: var(--radius-sm);
+    font-size: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.cal-paciente-seleccionado[hidden] { display: none; }
+.cal-paciente-seleccionado__clear {
+    background: none; border: 0;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.4rem;
+}
+
+/* ── Panel contenedor ─────────────────────────────────────────────────────────── */
+.panel--calendario {
+    padding: 0;
+    overflow: hidden;
+}
+
+@media (max-width: 800px) {
+    .page-header:has(#btn-nueva-cita) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .page-header:has(#btn-nueva-cita) .page-header__actions {
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+    }
+    .page-header:has(#btn-nueva-cita) .page-header__actions .btn {
+        padding: 0.8rem 1rem;
+        font-size: 0;
+        line-height: 1;
+    }
+    .page-header:has(#btn-nueva-cita) .page-header__actions .btn i {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+}
+
+/* Expandir el contenedor del calendario a todo el ancho en móvil */
+@media (max-width: 800px) {
+    .dashboard__content:has(.panel--calendario) {
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+    }
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
+.cal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    padding: 1.4rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.cal-toolbar__nav {
+    display: flex;
+    align-items: center;
+    /* gap: 0.6rem; */
+    flex: 1;
+    min-width: 0;
+}
+
+.cal-nav-btn {
+    flex-shrink: 0;
+}
+
+.cal-titulo-periodo {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-toolbar__mes {
+    flex-shrink: 0;
+}
+
+.cal-select-mes {
+    padding: 0.6rem 1rem;
+    font-size: 1.3rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.cal-toolbar__vistas {
+    display: flex;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.cal-vista-btn {
+    background: var(--color-surface);
+    border: 0;
+    border-right: 1px solid var(--color-border-strong);
+    padding: 0.6rem 1.4rem;
+    font-size: 1.3rem;
+    font-family: inherit;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cal-vista-btn:last-child { border-right: 0; }
+
+.cal-vista-btn:hover { background: var(--color-surface-soft); color: var(--color-text); }
+
+.cal-vista-btn--active {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+/* ── Grid mensual ─────────────────────────────────────────────────────────────── */
+.cal-mes-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.cal-mes-grid__cabecera {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cal-mes-grid__cab-dia {
+    padding: 0.8rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cal-mes-grid__cuerpo {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-mes-grid__celda {
+    min-height: 11rem;
+    padding: 0.6rem;
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.cal-mes-grid__celda:nth-child(7n) { border-right: 0; }
+
+.cal-mes-grid__celda--fuera {
+    background: var(--color-surface-soft);
+}
+
+.cal-mes-grid__celda--activa {
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.cal-mes-grid__celda--activa:hover {
+    background: var(--color-primary-soft);
+}
+
+.cal-mes-grid__celda--activa:hover .cal-mes-grid__num:not(.cal-mes-grid__num--hoy) {
+    color: var(--color-primary);
+}
+
+.cal-mes-grid__num {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    width: 2.4rem;
+    height: 2.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-bottom: 0.2rem;
+}
+
+.cal-mes-grid__num--hoy {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.cal-mes-chip {
+    display: block;
+    width: 100%;
+    padding: 0.3rem 0.6rem;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background: var(--chip-color, var(--color-primary));
+    color: #fff;
+    border: 0;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.15s;
+}
+
+.cal-mes-chip:hover { opacity: 0.85; }
+
+.cal-mes-grid__mas {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    padding: 0.2rem 0.4rem;
+}
+
+/* ── Traducción días semana en Schedule (sobreescribe content:attr(data-weekday)) */
+.lm-schedule thead td[data-weekday="Mon"]:before { content: "Lun" !important; }
+.lm-schedule thead td[data-weekday="Tue"]:before { content: "Mar" !important; }
+.lm-schedule thead td[data-weekday="Wed"]:before { content: "Mié" !important; }
+.lm-schedule thead td[data-weekday="Thu"]:before { content: "Jue" !important; }
+.lm-schedule thead td[data-weekday="Fri"]:before { content: "Vie" !important; }
+.lm-schedule thead td[data-weekday="Sat"]:before { content: "Sáb" !important; }
+.lm-schedule thead td[data-weekday="Sun"]:before { content: "Dom" !important; }
+
+/* ── Schedule (día/semana) override ───────────────────────────────────────────── */
+#calendario-root {
+    --calendar-js-default-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --calendar-js-grid-border-color: var(--color-border);
+    --calendar-js-dark-color: var(--color-text);
+    --calendar-js-light-color: var(--color-surface);
+    --calendar-js-input-background-color: var(--color-surface);
+    --calendar-js-input-border-color: var(--color-border-strong);
+    min-height: 60rem;
+}
+
+/* Líneas separadoras entre días en vista semanal */
+.lm-schedule tbody tr td + td,
+.lm-schedule thead tr td + td {
+    border-left: 1px solid var(--color-border) !important;
+}
+
+.lm-schedule .lm-schedule-item {
+    cursor: pointer;
+}
+
+/* Bloquear creación por drag/click en celdas vacías de la vista día/semana */
+.lm-schedule td, .lm-schedule tbody { user-select: none; }
+.lm-schedule .lm-schedule-pointer,
+.lm-schedule .lm-schedule-selected,
+.lm-schedule .lm-schedule-background:not(.lm-schedule-item) {
+    pointer-events: none !important;
+}
+
+/* ── Leyenda ─────────────────────────────────────────────────────────────────── */
+.cal-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.8rem;
+    align-items: center;
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+}
+
+.cal-leyenda__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cal-leyenda__dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ── Modal calendario ─────────────────────────────────────────────────────────── */
+.cal-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.cal-modal[hidden] { display: none; }
+
+.cal-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 24, 35, 0.45);
+}
+
+.cal-modal__box {
+    position: relative;
+    z-index: 1;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 58rem;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cal-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.8rem 2.4rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cal-modal__title { font-size: 1.8rem; }
+
+.cal-modal__close {
+    background: none;
+    border: 0;
+    padding: 0.4rem;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 1.8rem;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s;
+}
+
+.cal-modal__close:hover { color: var(--color-text); }
+
+.cal-modal__body {
+    padding: 2rem 2.4rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.cal-modal__body a{
+    text-decoration: none !important;
+}
+
+.cal-modal__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    padding: 1.4rem 2.4rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.cal-modal__footer #cal-link-detalle { margin-right: auto; }
+
+/* ── Detalle de cita ──────────────────────────────────────────────────────────── */
+.cal-detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin: 0;
+}
+
+.cal-detalle__row {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: 0.8rem;
+    align-items: start;
+}
+
+.cal-detalle__row dt {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cal-detalle__row dd {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
+}
+
+.cal-detalle__tel {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.cal-detalle__tel:hover {
+    text-decoration: underline;
+}
+
+.cal-detalle__wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #199045;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.cal-detalle__wa:hover {
+    color: #1da851;
+    text-decoration: underline;
+}
+
+.call-detalle__info {
+    margin-top: 1rem;
+    font-size: 1.4rem;
+    color: gray;
+}
+
+.cal-detalle__select {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.6rem 1rem;
+    font-size: 1.4rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.cal-detalle__error {
+    display: block;
+    margin-top: 1.2rem;
+    color: var(--color-danger, #b03a2e);
+    font-size: 1.3rem;
+}
+
+.cal-detalle__ok {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.2rem;
+    color: #2f8f5f;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.cal-detalle__ok.is-visible {
+    display: inline-flex;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+    .cal-toolbar {
+        gap: 0.8rem;
+        padding: 1rem 1.4rem;
+    }
+
+    .cal-detalle__row { grid-template-columns: 1fr; gap: 0.2rem; }
+
+    .cal-modal__box { max-height: 95vh; }
+
+    .panel--calendario { margin-left: -1.4rem; margin-right: -1.4rem; }
+
+    .cal-mes-grid__celda {
+        min-height: auto;
+        height: calc((100dvh - 28rem) / 6);
+        min-height: 12rem;
+        padding: 0.4rem;
+        overflow: hidden;
+    }
+    .cal-mes-grid__num {
+        width: 2rem; height: 2rem;
+        font-size: 1.1rem;
+    }
+    .cal-mes-chip {
+        font-size: 1rem;
+        padding: 0.2rem 0.4rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .cal-mes-grid__mas { font-size: 1rem; padding: 0.1rem 0.3rem; }
+}
+
+@media (max-width: 520px) {
+    .panel--calendario { margin-left: -0.6rem; margin-right: -0.6rem; border-radius: 0; }
+
+    .cal-mes-grid__cabecera,
+    .cal-mes-grid__cuerpo {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+    .cal-mes-grid__celda {
+        padding: 0.3rem 0.2rem;
+        min-height: 12rem;
+        height: calc((100dvh - 24rem) / 6);
+    }
+    .cal-mes-grid__cab-dia { font-size: 0.95rem; padding: 0.5rem 0.1rem; }
+    .cal-mes-chip { font-size: 0.95rem; padding: 0.15rem 0.3rem; }
+    .cal-mes-grid__num { width: 1.8rem; height: 1.8rem; font-size: 1rem; }
+}

@@ -1,0 +1,17 @@
+{
+    "slug": "tema-base",
+    "name": "Tierra Cálida",
+    "description": "Diseño acogedor en tonos tierra y beige. Ideal para transmitir calidez y confianza.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary":    "#976147",
+        "secondary":  "#5b4034",
+        "accent":     "#c0a090",
+        "bg":         "#f6f2f0",
+        "bg_alt":     "#eee8e5",
+        "text":       "#1a1414",
+        "text_light": "#736b6b"
+    },
+    "image_slots": ["hero", "sobre-mi", "servicios-bg", "blog-bg"],
+    "preview_colors": ["#976147", "#5b4034", "#c0a090", "#f6f2f0"]
+}

@@ -1,0 +1,271 @@
+/* ── Grid de formularios de configuración ─────────────────────────────────── */
+.config-form__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+    gap: 2rem;
+    margin-bottom: 1.6rem;
+}
+
+.config-form__fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 1.6rem;
+    margin: 1.6rem 0;
+}
+
+.config-form__fieldset legend {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text);
+    padding: 0 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.config-form__foto-actual {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin-bottom: 1.4rem;
+}
+
+.config-form__foto-preview {
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-soft);
+}
+
+/* ── Cards de servicios / terapias ────────────────────────────────────────── */
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+    gap: 1.6rem;
+}
+
+.config-card {
+    display: grid;
+    grid-template-columns: 5rem 1fr auto;
+    gap: 1.4rem;
+    align-items: start;
+}
+
+.config-card__icon {
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.config-card__body {
+    min-width: 0;
+}
+
+.config-card__titulo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.config-card__desc {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.config-card__actions {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ── Placeholders panel (PDF protección datos) ────────────────────────────── */
+.placeholders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.placeholder-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1.3rem;
+}
+
+.placeholder-item__code {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.3rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: text;
+    user-select: all;
+    flex-shrink: 0;
+}
+
+.placeholder-item__desc {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+}
+
+/* ── Form field switch (checkbox visibility) ────────────────────────────── */
+.form-field--switch {
+    margin-top: 2rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ── Form grid genérico ─────────────────────────────────────────────────── */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-grid--single {
+    grid-template-columns: 1fr;
+}
+
+/* ── Tutorial Gmail (email-notificaciones) ──────────────────────────────── */
+.email-tutorial {
+    margin-bottom: 2.4rem;
+}
+
+.email-tutorial__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.email-tutorial__steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 1.6rem;
+    counter-reset: tutorial-step;
+    padding: 0;
+}
+
+.email-tutorial__steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    counter-increment: tutorial-step;
+}
+
+.email-tutorial__steps li::before {
+    content: counter(tutorial-step);
+    min-width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.email-tutorial__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1.2rem 1.4rem;
+    background: var(--color-primary-soft);
+    border-radius: var(--radius-sm);
+    font-size: 1.3rem;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.email-tutorial__note i {
+    color: var(--color-primary);
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+/* ─── Móvil (<570px): tutorial de email legible y bien organizado ──────────── */
+@media (max-width: 570px) {
+    .email-tutorial__steps {
+        gap: 1rem;
+    }
+    .email-tutorial__steps li {
+        font-size: 1.3rem;
+        line-height: 1.5;
+        gap: 0.9rem;
+    }
+    .email-tutorial__steps li::before {
+        min-width: 2.4rem;
+        height: 2.4rem;
+        font-size: 1.1rem;
+    }
+    .email-tutorial__title {
+        font-size: 1.5rem;
+    }
+    .email-tutorial__note {
+        font-size: 1.25rem;
+        padding: 1rem 1.1rem;
+    }
+}
+
+/* ── Redes sociales form ────────────────────────────────────────────────── */
+.redes-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.redes-form-field__label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.redes-form-field__icon {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}

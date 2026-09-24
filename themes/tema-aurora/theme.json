@@ -1,0 +1,17 @@
+{
+    "slug": "tema-aurora",
+    "name": "Aurora Editorial",
+    "description": "Diseño editorial con gradientes aurora, glassmorphism y composición asimétrica. Mezcla tipografía serif y sans para una estética cálida y sofisticada.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#6b4ee6",
+        "secondary": "#ff8a7d",
+        "accent": "#ffd5a0",
+        "bg": "#fbf7f3",
+        "bg_alt": "#f0e9ff",
+        "text": "#1a1330",
+        "text_light": "#5a526d"
+    },
+    "image_slots": ["hero", "sobre-mi", "blog-bg"],
+    "preview_colors": ["#6b4ee6", "#ff8a7d", "#ffd5a0", "#fbf7f3"]
+}

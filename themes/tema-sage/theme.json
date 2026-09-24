@@ -1,0 +1,17 @@
+{
+    "slug": "tema-sage",
+    "name": "Verde Sage",
+    "description": "Diseño sereno en verde sage y crema. Tipografía cálida, paleta natural y orgánica.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#5b6f5a",
+        "secondary": "#8aa28b",
+        "accent": "#dfe6dd",
+        "bg": "#f5f1e8",
+        "bg_alt": "#eae4d3",
+        "text": "#2b2e2a",
+        "text_light": "#6c6f6a"
+    },
+    "image_slots": ["hero", "sobre-mi", "blog-bg"],
+    "preview_colors": ["#5b6f5a", "#8aa28b", "#dfe6dd", "#f5f1e8"]
+}

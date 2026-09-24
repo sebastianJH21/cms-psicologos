@@ -1,0 +1,17 @@
+{
+    "slug": "tema-bold",
+    "name": "Bold Amarillo",
+    "description": "Estilo brutalist con tipografía contundente, amarillo eléctrico y rosa magenta. Atrevido y memorable.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#000000",
+        "secondary": "#ffd233",
+        "accent": "#ec4899",
+        "bg": "#ffffff",
+        "bg_alt": "#fff8d6",
+        "text": "#000000",
+        "text_light": "#3d3d3d"
+    },
+    "image_slots": ["hero", "sobre-mi", "blog-bg"],
+    "preview_colors": ["#000000", "#ffd233", "#ec4899", "#ffffff"]
+}

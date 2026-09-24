@@ -1,0 +1,17 @@
+{
+    "slug": "tema-organico",
+    "name": "Orgánico Coral",
+    "description": "Formas orgánicas redondeadas con tonos coral, nude y crema. Femenino, cálido y cercano.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#d4736a",
+        "secondary": "#e8a194",
+        "accent": "#fce8e1",
+        "bg": "#fef7f4",
+        "bg_alt": "#f9ddd4",
+        "text": "#3a2624",
+        "text_light": "#7a615e"
+    },
+    "image_slots": ["hero", "sobre-mi", "blog-bg"],
+    "preview_colors": ["#d4736a", "#e8a194", "#fce8e1", "#f9ddd4"]
+}

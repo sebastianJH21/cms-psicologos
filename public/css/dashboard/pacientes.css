@@ -1,0 +1,337 @@
+/* ── Filtros listado ────────────────────────────────────────────────────────── */
+.pacientes-filtros {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto auto;
+    gap: 1.2rem;
+    align-items: end;
+}
+
+.pacientes-filtros__actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: nowrap;
+}
+
+/* ── Estilos de form-wrapper (cita-form no se carga globalmente) ────────────── */
+.cita-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+.cita-form__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 2.4rem;
+}
+
+/* ── Formulario crear/editar ────────────────────────────────────────────────── */
+.paciente-form__fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 2.4rem 2.4rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+.paciente-form__fieldset + .paciente-form__fieldset {
+    margin-top: 1.2rem;
+}
+
+.paciente-form__fieldset legend {
+    padding: 0 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+
+/* ── Layout ficha paciente ──────────────────────────────────────────────────── */
+.paciente-show {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
+}
+
+.paciente-show__full {
+    grid-column: 1 / -1;
+}
+
+/* ── Bloque de datos con icono ──────────────────────────────────────────────── */
+.paciente-datos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 1.8rem;
+    margin-top: 0.4rem;
+}
+
+.paciente-dato {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+}
+
+.paciente-dato__icon {
+    width: 3.6rem;
+    height: 3.6rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.paciente-dato__icon--primary {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+.paciente-dato__icon--success {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+}
+
+.paciente-dato__icon--info {
+    background: var(--color-info-soft);
+    color: var(--color-info);
+}
+
+.paciente-dato__icon--warning {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+
+.paciente-dato__icon--muted {
+    background: var(--color-surface-soft);
+    color: var(--color-text-muted);
+}
+
+.paciente-dato__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.paciente-dato__label {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.paciente-dato__value {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    word-break: break-word;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.paciente-dato__link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s;
+}
+
+.paciente-dato__link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.paciente-dato__link--wa {
+    color: #1e8845;
+}
+
+.paciente-dato__link--wa:hover {
+    color: #1e9b4c;
+}
+
+/* ── Estado vacío ───────────────────────────────────────────────────────────── */
+.empty-state--inline {
+    padding: 1.6rem 1rem;
+}
+
+.empty-state .btn {
+    margin-top: 1.2rem;
+}
+
+/* ── Tabla ──────────────────────────────────────────────────────────────────── */
+.data-table__row--muted {
+    opacity: 0.6;
+}
+
+/* ── Modal ancho (nueva cita desde ficha paciente) ──────────────────────────── */
+.modal__dialog--wide {
+    max-width: 72rem;
+}
+
+/* ── Buscador de pacientes en formulario cita ───────────────────────────────── */
+.paciente-busqueda {
+    grid-column: 1 / -1;
+}
+
+.paciente-busqueda__wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.paciente-busqueda__wrap input {
+    padding-right: 3.8rem;
+}
+
+.paciente-busqueda__clear {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0.4rem;
+    font-size: 1.4rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.paciente-busqueda__clear:hover {
+    color: var(--color-text);
+}
+
+.paciente-busqueda__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 50;
+    max-height: 24rem;
+    overflow-y: auto;
+    margin-top: 0.2rem;
+}
+
+.paciente-busqueda__item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.paciente-busqueda__item:last-child {
+    border-bottom: none;
+}
+
+.paciente-busqueda__item:hover {
+    background: var(--color-surface-soft);
+}
+
+.paciente-busqueda__item--vacio {
+    cursor: default;
+    color: var(--color-text-muted);
+    font-size: 1.3rem;
+}
+
+.paciente-busqueda__item--vacio:hover {
+    background: transparent;
+}
+
+.paciente-busqueda__item-nombre {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.paciente-busqueda__item-meta {
+    display: block;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    margin-top: 0.2rem;
+}
+
+.paciente-busqueda__seleccionado {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    background: var(--color-success-soft);
+    border: 1px solid var(--color-success);
+    border-radius: var(--radius-md);
+    font-size: 1.3rem;
+    color: var(--color-success);
+    font-weight: 500;
+}
+
+.paciente-busqueda__seleccionado[hidden] {
+    display: none;
+}
+
+/* ── Loading tabla pacientes (AJAX) ─────────────────────────────────────────── */
+.tabla-pacientes--loading {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.15s;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .paciente-show {
+        grid-template-columns: 1fr;
+    }
+    .paciente-show__full {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 750px) {
+    .paciente-show,
+    .paciente-datos {
+        grid-template-columns: 1fr;
+    }
+    .paciente-show__full,
+    .paciente-show > .panel,
+    .paciente-show__side {
+        max-width: 100%;
+        min-width: 0;
+    }
+    .paciente-dato__value {
+        overflow-wrap: anywhere;
+    }
+    .pacientes-filtros {
+        grid-template-columns: 1fr;
+    }
+    .pacientes-filtros__actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+    .pacientes-filtros {
+        grid-template-columns: 1fr;
+    }
+    .pacientes-filtros__actions {
+        flex-wrap: wrap;
+    }
+    .paciente-datos {
+        grid-template-columns: 1fr;
+    }
+}

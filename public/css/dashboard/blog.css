@@ -1,0 +1,196 @@
+/* ── Form helpers para el blog ─────────────────────────────────────────────── */
+.form-field--full { grid-column: 1 / -1; }
+
+/* ── Buscador de artículos ─────────────────────────────────────────────────── */
+.blog-filtros {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr auto auto;
+    gap: 1.2rem;
+    align-items: end;
+    padding: 0.4rem 0;
+}
+
+.blog-filtros .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.blog-filtros__actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: nowrap;
+}
+
+/* ── Empty state mejorado ──────────────────────────────────────────────────── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.empty-state__icon {
+    font-size: 4rem;
+    color: var(--color-text-muted);
+}
+
+.empty-state__title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.empty-state__hint {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text-muted);
+}
+
+.empty-state .btn {
+    margin-top: 0.8rem;
+}
+
+.blog-form__fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.6rem 1.8rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.blog-form__fieldset legend {
+    padding: 0 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.blog-form__imagen-actual {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+}
+
+.blog-form__imagen-actual img {
+    width: 16rem;
+    height: 10rem;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.blog-form__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+/* ── Mejora de espaciado en formularios ─────────────────────────────────────── */
+.cita-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cita-form__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 1.6rem;
+}
+
+/* ── Vista de artículo ─────────────────────────────────────────────────────── */
+.blog-show {
+    padding: 2.4rem 2.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.blog-show__imagen {
+    width: 100%;
+    max-height: 38rem;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+}
+
+.blog-show__extracto {
+    font-size: 1.6rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin: 0;
+    padding-left: 1.4rem;
+    border-left: 3px solid var(--color-primary);
+}
+
+.blog-show__contenido {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: var(--color-text);
+}
+
+.blog-show__contenido h1,
+.blog-show__contenido h2,
+.blog-show__contenido h3,
+.blog-show__contenido h4 {
+    margin: 2rem 0 1rem;
+    color: var(--color-text);
+}
+
+.blog-show__contenido p { margin: 0 0 1.4rem; }
+.blog-show__contenido ul,
+.blog-show__contenido ol { margin: 0 0 1.4rem 2rem; }
+.blog-show__contenido img { max-width: 100%; height: auto; border-radius: var(--radius-sm); }
+.blog-show__contenido blockquote {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1.6rem;
+    margin: 1.4rem 0;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+.blog-show__contenido pre {
+    background: var(--color-surface-soft);
+    padding: 1.4rem;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-size: 1.3rem;
+}
+.blog-show__contenido code {
+    background: var(--color-surface-soft);
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.4rem;
+    font-size: 0.95em;
+}
+
+/* ── Page header con acciones múltiples ────────────────────────────────────── */
+.page-header__actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ── Override Jodit para que se integre con el dashboard ───────────────────── */
+.jodit-container.jodit-container_size-default {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+}
+
+.jodit-container.jodit-container_size-default .jodit-toolbar__box {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.jodit-container.jodit-container_size-default .jodit-workplace {
+    min-height: 32rem;
+}

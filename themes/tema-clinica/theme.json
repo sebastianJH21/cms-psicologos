@@ -1,0 +1,17 @@
+{
+    "slug": "tema-clinica",
+    "name": "Clínica Azul",
+    "description": "Diseño profesional en azul y verde menta. Perfecto para entornos clínicos y terapéuticos.",
+    "supports": ["landing", "multipage"],
+    "color_palette": {
+        "primary": "#2980b9",
+        "secondary": "#1abc9c",
+        "accent": "#7fb3d3",
+        "bg": "#f0f8ff",
+        "bg_alt": "#daeeff",
+        "text": "#2c3e50",
+        "text_light": "#5d7d8e"
+    },
+    "image_slots": ["hero", "sobre-mi", "servicios-bg", "blog-bg"],
+    "preview_colors": ["#2980b9", "#1abc9c", "#7fb3d3", "#f0f8ff"]
+}

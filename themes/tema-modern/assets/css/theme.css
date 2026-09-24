@@ -1,0 +1,29 @@
+/* Moderno Púrpura — overrides sobre las variables de tema-base/styles.css */
+:root {
+    --color-primary:   #6c5ce7;
+    --color-orange:    #a29bfe;
+    --color-orange2:   #a29bfe;
+    --color-orange3:   #6c5ce7;
+    --color-orange4:   #ede7ff;
+    --color-orange5:   #a29bfe;
+    --color-orange6:   #a29bfe;
+    --color-orange7:   #6c5ce7;
+
+    --color-brown:     #a29bfe;
+    --color-brown2:    #a29bfe;
+    --color-brown3:    #8577f0;
+
+    --color-white:     #f8f7ff;
+    --color-white3:    #ede7ff;
+    --color-white4:    #ede7ff;
+    --color-white5:    #e0d9ff;
+    --color-white10:   #f8f7ff;
+    --color-white11:   #ede7ff;
+
+    --color-black:     #2d3436;
+    --color-black4:    #1e1f2b;
+
+    --color-gray2:     #636e72;
+
+    --font-heading: 'Montserrat', sans-serif;
+}

@@ -1,0 +1,29 @@
+/* Clínica Azul — overrides sobre las variables de tema-base/styles.css */
+:root {
+    --color-primary:   #2980b9;
+    --color-orange:    #1abc9c;
+    --color-orange2:   #7fb3d3;
+    --color-orange3:   #2980b9;
+    --color-orange4:   #daeeff;
+    --color-orange5:   #7fb3d3;
+    --color-orange6:   #7fb3d3;
+    --color-orange7:   #2980b9;
+
+    --color-brown:     #1abc9c;
+    --color-brown2:    #1abc9c;
+    --color-brown3:    #22c9a7;
+
+    --color-white:     #f0f8ff;
+    --color-white3:    #daeeff;
+    --color-white4:    #daeeff;
+    --color-white5:    #c8e6f7;
+    --color-white10:   #f0f8ff;
+    --color-white11:   #daeeff;
+
+    --color-black:     #2c3e50;
+    --color-black4:    #1a2535;
+
+    --color-gray2:     #5d7d8e;
+
+    --font-heading: 'Montserrat', 'Helvetica Neue', sans-serif;
+}

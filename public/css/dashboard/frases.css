@@ -1,0 +1,87 @@
+.frases-form {
+    padding: 2rem 2.4rem;
+    margin-bottom: 2.4rem;
+}
+
+.frases-form__head {
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.frases-form__title {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0 0 0.4rem;
+    color: var(--color-text);
+}
+
+.frases-form__title i { color: var(--color-primary); }
+
+.frases-form__sub {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1.3rem;
+}
+
+.frases-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 1.8rem;
+    margin-bottom: 1.8rem;
+}
+
+.frases-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.frases-form__field label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text);
+}
+
+.frases-form__field label i {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+.frases-form__field input,
+.frases-form__field textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1.3rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition: border-color 0.15s;
+}
+
+.frases-form__field input:focus,
+.frases-form__field textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.frases-form__field--wide {
+    grid-column: 1 / -1;
+}
+
+.form-actions--end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+    .frases-form__grid { grid-template-columns: 1fr; }
+}
