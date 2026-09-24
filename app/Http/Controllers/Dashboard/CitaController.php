@@ -92,7 +92,8 @@ class CitaController extends Controller
         return view('dashboard.citas.create', [
             'modalidades' => Cita::MODALIDADES,
             'estados' => Cita::ESTADOS,
-            'duracion' => $this->citaService->duracionSesion(),
+            'duracionPresencial' => $this->citaService->duracionPresencial(),
+            'duracionOnline' => $this->citaService->duracionOnline(),
             'descansoPresencial' => $this->citaService->descansoActivo('presencial') ? $this->citaService->descansoMin('presencial') : 0,
             'descansoOnline' => $this->citaService->descansoActivo('online') ? $this->citaService->descansoMin('online') : 0,
             'fechaPredeterminada' => $request->input('fecha', now()->addHour()->format('Y-m-d\TH:00')),
@@ -142,7 +143,8 @@ class CitaController extends Controller
             'cita' => $cita,
             'modalidades' => Cita::MODALIDADES,
             'estados' => Cita::ESTADOS,
-            'duracion' => $this->citaService->duracionSesion(),
+            'duracionPresencial' => $this->citaService->duracionPresencial(),
+            'duracionOnline' => $this->citaService->duracionOnline(),
             'descansoPresencial' => $this->citaService->descansoActivo('presencial') ? $this->citaService->descansoMin('presencial') : 0,
             'descansoOnline' => $this->citaService->descansoActivo('online') ? $this->citaService->descansoMin('online') : 0,
         ]);

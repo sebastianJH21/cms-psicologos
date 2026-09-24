@@ -168,7 +168,6 @@ class CitaController extends Controller
             'mensajeVacaciones' => (string) Setting::get('disponibilidad.mensaje_vacaciones', 'Estoy de vacaciones temporalmente. Vuelvo pronto.'),
             'tieneOnline' => $disponibilidades->where('modalidad', 'online')->isNotEmpty(),
             'tienePresencial' => $disponibilidades->where('modalidad', 'presencial')->isNotEmpty(),
-            'duracionSesion' => (int) Setting::get('disponibilidad.duracion_sesion_min', 60),
         ];
     }
 }

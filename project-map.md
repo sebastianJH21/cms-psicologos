@@ -23,8 +23,8 @@ _Última actualización: 2026-09-23 (reconstruido por auditoría del código)._
 | 1 | Asistente de instalación | [ ] Finalizada con pendientes (F1.9) |
 | 2 | Login seguro | [x] Finalizada |
 | 3 | Layout y menú del panel | [x] Finalizada |
-| 4 | Inicio, disponibilidad y gestión de citas | [ ] Finalizada con pendientes (F4.5.7) |
-| 5 | Calendario del panel | [x] Finalizada (le afecta F4.5.7) |
+| 4 | Inicio, disponibilidad y gestión de citas | [x] Finalizada |
+| 5 | Calendario del panel | [x] Finalizada |
 | 6 | Blog y editor WYSIWYG | [x] Finalizada |
 | 7 | Pacientes | [x] Finalizada |
 | 8 | Historias clínicas | [x] Finalizada |
@@ -45,7 +45,6 @@ _Última actualización: 2026-09-23 (reconstruido por auditoría del código)._
 | ID | Tarea | Acción que se propone |
 |---|---|---|
 | F1.9 | El asistente no recoge horarios ni disponibilidad | Añadir un paso o quitar el requisito de CLAUDE.md |
-| F4.5.7 | Las citas manuales (formulario y calendario) duran siempre 60 min: no usan la duración de cada modalidad | **Terminar** (es un fallo funcional) |
 | F19.1 | `innerHTML` en los JS de los temas | Terminar |
 | F19.2 | Código muerto y ficheros de andamiaje | Eliminar |
 | F19.3 | No hay tests automáticos | Terminar |
@@ -145,14 +144,14 @@ _CLAUDE.md: inicio con resumen y estadísticas; disponibilidad online/presencial
   - [x] F4.4.1 `diasDisponibles()` (excluye los periodos de vacaciones)
   - [x] F4.4.2 `slotsDisponibles()` (modo vacaciones, periodos, huecos pasados, solapamientos)
   - [x] F4.4.3 Endpoints `/reservas/dias` y `/reservas/slots` compartidos con el panel
-- [ ] **F4.5 Gestión de citas (CRUD)**
+- [x] **F4.5 Gestión de citas (CRUD)**
   - [x] F4.5.1 Listado paginado con filtros (próximas/pasadas, modalidad, estado, fechas, texto) por AJAX
   - [x] F4.5.2 Crear/editar con modal de huecos disponibles **[EXTRA]**
   - [x] F4.5.3 Detalle de la cita
   - [x] F4.5.4 Cambio rápido de estado **[EXTRA]**
   - [x] F4.5.5 Confirmar la cita por WhatsApp **[EXTRA]**
   - [x] F4.5.6 Cancelar/eliminar con modal de confirmación (soft delete)
-  - [ ] F4.5.7 **Duración por modalidad en las citas manuales** — `fecha_fin` se calcula con la clave heredada `duracion_sesion_min` (siempre 60 min) en `StoreCitaRequest`, `UpdateCitaRequest`, `CalendarioController@index` y `Public\CitaController@datosVista`
+  - [x] F4.5.7 **Duración por modalidad en las citas manuales** — `fecha_fin` ahora se calcula con `CitaService::duracionPorModalidad()` (`duracionPresencial()`/`duracionOnline()` según la modalidad enviada) en `StoreCitaRequest`, `UpdateCitaRequest`, `CalendarioController@index` y el formulario/JS del panel; se eliminaron `duracionSesion()` y `calcularFechaFin()` y la clave `duracionSesion` muerta en `Public\CitaController@datosVista` y en los 11 temas (nunca se usaba en la parte pública)
 
 ---
 
@@ -162,7 +161,7 @@ _CLAUDE.md: calendario con las citas y creación manual, al estilo de Google Cal
 
 - [x] F5.1 Calendar.js en español con vistas mes/semana/día (la vista se recuerda en `localStorage`) **[EXTRA]**
 - [x] F5.2 Feed JSON de citas + eventos, con colores por modalidad y estado
-- [x] F5.3 Crear cita desde el calendario (buscador de pacientes + huecos disponibles) *(la duración depende de F4.5.7)*
+- [x] F5.3 Crear cita desde el calendario (buscador de pacientes + huecos disponibles), con la duración de fin recalculada por modalidad
 - [x] F5.4 Modal de detalle con cambio de estado
 - [x] F5.5 Eventos extra (no citas): crear, editar y borrar **[EXTRA]**
 - [x] F5.6 Leyenda de colores **[EXTRA]**
