@@ -18,7 +18,7 @@ class UpdateCitaRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $duracion = (int) (app(CitaService::class)->duracionSesion());
+        $duracion = app(CitaService::class)->duracionPorModalidad($this->input('modalidad'));
         $fechaInicio = $this->input('fecha_inicio');
         $fechaFin = null;
 

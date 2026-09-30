@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class CitaService
 {
-    public function duracionSesion(): int
-    {
-        return (int) Setting::get('disponibilidad.duracion_sesion_min', 60);
-    }
-
     public function duracionPresencial(): int
     {
         return (int) Setting::get(
@@ -46,9 +41,9 @@ class CitaService
         return (bool) Setting::get('disponibilidad.modo_vacaciones', false);
     }
 
-    public function calcularFechaFin(Carbon $inicio): Carbon
+    public function duracionPorModalidad(?string $modalidad): int
     {
-        return $inicio->copy()->addMinutes($this->duracionSesion());
+        return $modalidad === 'online' ? $this->duracionOnline() : $this->duracionPresencial();
     }
 
     public function existeSolapamiento(Carbon $inicio, Carbon $fin, ?int $ignoreId = null): bool

@@ -4,7 +4,6 @@
     $mensajeVacaciones = $mensajeVacaciones ?? (string) \App\Models\Setting::get('disponibilidad.mensaje_vacaciones', '');
     $tieneOnline = $tieneOnline ?? \App\Models\Disponibilidad::where('modalidad','online')->where('activa',true)->exists();
     $tienePresencial = $tienePresencial ?? \App\Models\Disponibilidad::where('modalidad','presencial')->where('activa',true)->exists();
-    $duracionSesion = $duracionSesion ?? (int) \App\Models\Setting::get('disponibilidad.duracion_sesion_min', 60);
     $telefonoLimpio = preg_replace('/[^+0-9]/', '', $profile?->telefono_publico ?? '');
 @endphp
 
@@ -130,7 +129,6 @@ window.PSICOCMS_RESERVA = {
     slotsUrl: "{{ url('/reservas/slots') }}",
     crearUrl: "{{ url('/reservas/crear') }}",
     csrf: "{{ csrf_token() }}",
-    duracion: {{ $duracionSesion }},
     psicologa: @json(trim(($user?->nombre ?? '') . ' ' . ($user?->apellidos ?? ''))),
 };
 </script>

@@ -28,7 +28,8 @@ class CalendarioController extends Controller
         return view('dashboard.calendario.index', [
             'modalidades' => Cita::MODALIDADES,
             'estados' => Cita::ESTADOS,
-            'duracionSesion' => $this->citaService->duracionSesion(),
+            'duracionPresencial' => $this->citaService->duracionPresencial(),
+            'duracionOnline' => $this->citaService->duracionOnline(),
             'psicologaNombre' => $user ? trim($user->nombre . ' ' . $user->apellidos) : 'tu psicóloga',
         ]);
     }

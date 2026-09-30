@@ -81,6 +81,9 @@ class ThemeManager
 
     public function previewSlug(): ?string
     {
+        if (!auth()->check()) {
+            return null;
+        }
         $req = request();
         if (!$req) {
             return null;
@@ -94,6 +97,9 @@ class ThemeManager
 
     public function previewMode(): ?string
     {
+        if (!auth()->check()) {
+            return null;
+        }
         $req = request();
         if (!$req) {
             return null;

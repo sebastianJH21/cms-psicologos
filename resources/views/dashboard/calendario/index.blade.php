@@ -362,7 +362,8 @@
             eventoExtraBase: '{{ url('panel-psicologa/calendario/eventos-extra') }}',
             citaBase: '{{ url('panel-psicologa/citas') }}',
             pacientesBuscarUrl: '{{ route('dashboard.pacientes.buscar') }}',
-            duracion: {{ $duracionSesion }},
+            duracionPresencial: {{ $duracionPresencial }},
+            duracionOnline: {{ $duracionOnline }},
             psicologa: @json($psicologaNombre),
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         };

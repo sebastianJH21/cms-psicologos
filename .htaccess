@@ -1,0 +1,8 @@
+# Solo hace falta este fichero si el hosting no permite apuntar el document
+# root a la carpeta "public/" (frecuente en algunos hostings compartidos).
+# Si puedes configurar el document root a "public/", puedes borrar este fichero.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
