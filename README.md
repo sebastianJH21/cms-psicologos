@@ -1,66 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PsicoCMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+CMS a medida para psicólogas independientes: web pública administrable (con 11 temas visuales), sistema de reservas de citas, blog, y un panel privado para gestionar pacientes, historias clínicas, disponibilidad, calendario y toda la información pública de la consulta.
 
-## About Laravel
+Aplicación monolítica en Laravel, sin frameworks de JavaScript ni herramientas de build (HTML5, CSS3 y JavaScript nativos).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2 o superior, con las extensiones: `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `gd` o `imagick`, `dom`, `ctype`, `curl`.
+- MySQL o MariaDB.
+- Composer.
+- Servidor web (Apache/XAMPP) o el servidor embebido de PHP.
 
-## Learning Laravel
+No hace falta Node.js ni npm: no hay build de assets.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Instalación en local (XAMPP)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Copia el proyecto dentro de `htdocs/` (o crea un virtual host apuntando a la carpeta `public/`).
+2. Instala las dependencias de PHP:
+   ```bash
+   composer install
+   ```
+3. Crea el fichero de entorno y la clave de la aplicación:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+4. Crea una base de datos vacía en MySQL/MariaDB (puede hacerse desde phpMyAdmin; no hace falta crear tablas, eso lo hace el asistente).
+5. Arranca el servidor:
+   ```bash
+   php artisan serve
+   ```
+   o usa el virtual host de XAMPP apuntando a `public/`.
+6. Abre la URL de la aplicación en el navegador. Como todavía no está instalada, redirige automáticamente a `/instalacion`.
 
-## Laravel Sponsors
+### Asistente de instalación (`/instalacion`)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+El asistente, en 6 pasos, deja la aplicación lista para usar:
 
-### Premium Partners
+1. **Base de datos**: host, puerto, nombre, usuario y contraseña. El botón "Probar conexión" comprueba los datos antes de continuar. Al avanzar, crea la base de datos si no existe, escribe la configuración en `.env` y ejecuta las migraciones.
+2. **Cuenta de acceso**: nombre, apellidos, email, teléfono y contraseña (los tres primeros datos, junto con la contraseña, son el login de la psicóloga en `/acceso-psicologa`).
+3. **Datos públicos**: eslogan, teléfono y email de citas, nº de colegiado, sobre mí y dirección de la consulta.
+4. **Servicios, especialidades y planes y precios** (online y presencial).
+5. **Tema visual**: elegir uno de los temas disponibles y el formato (landing o multipágina).
+6. **Foto de perfil** (opcional, preferiblemente sin fondo).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Al terminar, crea la marca `storage/app/installed.lock`, enlaza `storage:link` y deja la sesión iniciada en el panel (`/panel-psicologa`). Mientras no exista esa marca, cualquier URL redirige a `/instalacion`; una vez instalada, `/instalacion` deja de estar accesible.
 
-## Contributing
+Toda la información del asistente puede ampliarse o corregirse después desde el panel.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Despliegue en producción / hosting compartido
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Sube todo el proyecto **incluyendo `vendor/`** (composer no siempre está disponible en hostings compartidos; si lo está, basta con `composer install --no-dev --optimize-autoloader`).
+2. Si el hosting permite cambiar el document root, apúntalo a la carpeta `public/`. Si no lo permite, deja el fichero `.htaccess` de la raíz del proyecto (ya incluido), que redirige las peticiones a `public/`.
+3. Copia `.env.example` a `.env`, genera la clave (`php artisan key:generate`) y ajusta `APP_URL`, `APP_ENV=production` y `APP_DEBUG=false`.
+4. Da permisos de escritura a `storage/` y `bootstrap/cache/`.
+5. Entra por la URL pública: el asistente de instalación arranca automáticamente.
+6. Tras instalar, comprueba que `public/storage` existe como enlace simbólico a `storage/app/public`. Si el hosting no permite symlinks, la aplicación sirve esos ficheros igualmente por una ruta alternativa (`/storage/{ruta}`), sin necesitar el enlace.
+7. Opcional, para ganar rendimiento: `php artisan config:cache`, `php artisan route:cache` y `php artisan view:cache` (recuerda limpiarlas con `php artisan optimize:clear` cada vez que cambies `.env` o rutas).
 
-## Security Vulnerabilities
+### Copias de seguridad
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Haz copia periódica de:
+- La base de datos completa.
+- La carpeta `storage/app` (fotos, avatar, adjuntos de historias clínicas e imágenes subidas).
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Notificaciones por email (Gmail)
+
+Desde el panel, en **Configuración → Email y notificaciones**, se configura una cuenta de Gmail para avisar de las nuevas reservas. Necesita una **contraseña de aplicación** (no la contraseña normal de la cuenta):
+
+1. Activa la verificación en dos pasos en la cuenta de Google.
+2. Entra en "Contraseñas de aplicación" dentro de la configuración de seguridad de Google.
+3. Crea una para "PsicoCMS" y copia los 16 caracteres en el panel.
+
+La contraseña se guarda cifrada en la base de datos.
+
+---
+
+## Cómo crear un tema visual nuevo
+
+Los temas viven en `themes/<slug>/` y son totalmente independientes entre sí (cada uno con su propio CSS; no hay herencia de vistas entre temas). La forma más simple de crear uno es duplicar un tema existente (por ejemplo `themes/tema-base/`) y ajustarlo:
+
+```
+themes/<slug>/
+├── theme.json                  (manifiesto del tema)
+├── captura.jpg                 (miniatura para la pantalla de temas del panel)
+├── assets/
+│   ├── css/                    (todo el CSS del tema, propio y no compartido)
+│   ├── js/                     (JS nativo del tema)
+│   └── img/                    (imágenes por defecto del tema)
+└── views/
+    ├── layout.blade.php        (head, SEO, cabecera y pie comunes)
+    ├── landing.blade.php       (modo landing: una sola página)
+    ├── multipage/              (una vista por página en modo multipágina)
+    └── partials/                (secciones reutilizadas por landing y multipage)
+```
+
+`theme.json` obligatorio:
+
+```json
+{
+    "slug": "mi-tema",
+    "name": "Nombre visible del tema",
+    "description": "Una frase que lo describe.",
+    "supports": ["landing", "multipage"],
+    "color_palette": { "primary": "#...", "secondary": "#...", "accent": "#...", "bg": "#...", "bg_alt": "#...", "text": "#...", "text_light": "#..." },
+    "image_slots": ["hero", "sobre-mi", "servicios-bg", "blog-bg"],
+    "preview_colors": ["#...", "#...", "#...", "#..."]
+}
+```
+
+Un tema aparece automáticamente en el panel (**Mi web → Temas**) en cuanto tiene un `theme.json` válido: no hace falta registrarlo en ningún otro sitio. Los assets se sirven de forma segura por `/theme-assets/{slug}/{ruta}` (helper `theme_asset()` en las vistas). Usa siempre `frase()`, `imagen_sitio()` y los modelos correspondientes para el contenido: ningún texto fijo debe ir escrito directamente en las vistas del tema.
+
+---
+
+## Tests automáticos
+
+```bash
+php artisan test
+```
+
+Los tests usan SQLite en memoria (configurado en `phpunit.xml`) y no tocan la base de datos real ni el `storage/app/installed.lock` del proyecto instalado. Cubren: login (y su límite de intentos), protección de las rutas del panel, cálculo de huecos de disponibilidad (duración y descanso entre sesiones), solapamientos, periodos de vacaciones y modo vacaciones, reserva pública (con su anti-spam), y la generación de los PDF de protección de datos.
+
+---
+
+## Documentación del proyecto
+
+- [CLAUDE.md](CLAUDE.md) — especificación funcional (qué construir).
+- [plan-implementacion.md](plan-implementacion.md) — arquitectura real y desglose por fases (cómo está construido).
+- [project-map.md](project-map.md) — estado actual de cada fase y tarea.
+- [prompts.md](prompts.md) — historial de peticiones del proyecto.

@@ -439,6 +439,8 @@ El dashboard permitirá:
 - Guarda las tareas y su estado en un fichero tareas.md en la raiz del proyecto y cada vez que se cumpla una, modificalo para actualizarlas.
 - Guarda cada uno de los prompt nuevos que haga en un fichero prompts.md en la raiz del proyecto (todos ordenados uno detras de otro dentro del fichero), cada vez que yo haga un prompt aparte, guardalo ahí.
 
+- Añadido tras la auditoría del código (ya implementado, decisión F19.8): `project-map.md` sustituye a `tareas.md` como fichero de seguimiento del estado de las tareas (mismo propósito, con más detalle por fase e IDs `F{fase}.{tarea}` enlazados con `plan-implementacion.md`). No se mantienen los dos ficheros por separado para no duplicar el estado y arriesgar que diverjan.
+
 ---
 
 ## Modo implementación:

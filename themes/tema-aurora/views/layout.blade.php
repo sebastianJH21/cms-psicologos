@@ -15,6 +15,8 @@
         <meta property="og:image" content="{{ asset('storage/' . $profile->foto_path) }}">
     @endif
 
+    @include('_shared.canonical')
+
     @include('_shared.favicon')
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

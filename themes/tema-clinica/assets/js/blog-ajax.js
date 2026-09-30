@@ -12,10 +12,12 @@
             });
             if (!res.ok) throw new Error('Error de red');
             const html = await res.text();
-            container.innerHTML = '';
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html;
-            while (tmp.firstChild) container.appendChild(tmp.firstChild);
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            container.replaceChildren();
+            Array.from(doc.body.childNodes).forEach((node) => {
+                container.appendChild(document.importNode(node, true));
+            });
             window.history.pushState({}, '', url);
             container.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch {

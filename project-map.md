@@ -11,7 +11,9 @@ Estado de todas las fases y tareas. Las tareas generales vienen de [CLAUDE.md](C
 | **[EXTRA]** | Funcionalidad que existe en el código pero no estaba en CLAUDE.md |
 | Fases | Mismas marcas: `[x]` finalizada, `[ ]` con tareas pendientes o sin empezar |
 
-_Última actualización: 2026-09-23 (reconstruido por auditoría del código)._
+_Última actualización: 2026-09-29 (Fase 19 completada: ver el detalle al final del documento)._
+
+> **Nota de entorno (2026-09-29, posterior a la Fase 19):** el usuario cambió el servidor local de base de datos (ahora un servicio `MySQL80` en vez de la MariaDB de XAMPP; credenciales `root`/`root` en `.env`). La base de datos `cms_app` no existía en ese servidor: se creó y se ejecutó `php artisan migrate` (esquema al día, sin datos). Como la base de datos quedó vacía, se borró `storage/app/installed.lock` para que la app vuelva a pedir el asistente de instalación (`/instalacion`) en vez de mostrarse "instalada" con una base de datos sin usuaria ni datos públicos. Ningún código de la Fase 19 se ha modificado por esto.
 
 ---
 
@@ -38,21 +40,15 @@ _Última actualización: 2026-09-23 (reconstruido por auditoría del código)._
 | 16 | Web pública: estructura y páginas | [x] Finalizada |
 | 17 | Reservas públicas | [x] Finalizada |
 | 18 | Blog público y redes sociales | [x] Finalizada |
-| 19 | Calidad, limpieza y producción *(nueva)* | [ ] Pendiente |
+| 19 | Calidad, limpieza y producción *(nueva)* | [x] Finalizada |
 
 ### Tareas abiertas
 
 | ID | Tarea | Acción que se propone |
 |---|---|---|
 | F1.9 | El asistente no recoge horarios ni disponibilidad | Añadir un paso o quitar el requisito de CLAUDE.md |
-| F19.1 | `innerHTML` en los JS de los temas | Terminar |
-| F19.2 | Código muerto y ficheros de andamiaje | Eliminar |
-| F19.3 | No hay tests automáticos | Terminar |
-| F19.4 | `robots.txt`, `sitemap.xml` y canonical | Terminar |
-| F19.5 | `.env.example` con `en`/`UTC` | Terminar |
-| F19.6 | README propio del proyecto | Terminar |
-| F19.7 | `?preview_theme` accesible a cualquier visitante | Terminar |
-| F19.8 | `prompts.md` / `tareas.md` que pide CLAUDE.md | Decidir |
+| — | `database/seeders/DatabaseSeeder.php` sigue siendo la plantilla de Laravel: crea un `User` con los campos `name`/`email` (no existen en nuestra tabla `users`, que usa `nombre`/`apellidos`/`telefono`) y no llama a `CategoriasBlogSeeder` ni a `DemoDataSeeder`. `php artisan db:seed` (sin `--class`) fallaría. Encontrado al arreglar `UserFactory` para los tests de F19.3; no se ha tocado por estar fuera del alcance de la Fase 19 | Reescribir `DatabaseSeeder::run()` en una fase futura para que use los campos reales y encadene `CategoriasBlogSeeder` (y opcionalmente `DemoDataSeeder` solo en local) |
+| — | `composer.json` conserva `"name": "laravel/laravel"` y la descripción/keywords por defecto | Actualizar a los datos reales del proyecto cuando se toque de nuevo `composer.json` |
 
 ---
 
@@ -61,7 +57,7 @@ _Última actualización: 2026-09-23 (reconstruido por auditoría del código)._
 _CLAUDE.md › Fases del desarrollo: "Estudia las características del proyecto" y "Crea la base de datos"._
 
 - [x] F0.1 Proyecto Laravel 11 + dompdf, Intervention Image, HTMLPurifier
-- [x] F0.2 Configuración regional (`es`, `Europe/Madrid`, sesiones en BD) en `.env` *(falta en `.env.example`, ver F19.5)*
+- [x] F0.2 Configuración regional (`es`, `Europe/Madrid`, sesión/caché/colas en fichero) en `.env` y en `.env.example` (F19.5)
 - [x] F0.3 Font Awesome, Jodit 4.7.6 y Calendar.js copiados en `public/vendor/`
 - [x] F0.4 Migraciones base (`users`, `sessions`, `cache`, `jobs`, `profile`, `settings`)
 - [x] F0.5 Modelos `User`, `Profile::singleton()`, `Setting::get/set`
@@ -117,7 +113,7 @@ _CLAUDE.md: panel en `/panel-psicologa` con autenticación; menú lateral sencil
 
 ---
 
-## [ ] FASE 4 — Inicio, disponibilidad y gestión de citas
+## [x] FASE 4 — Inicio, disponibilidad y gestión de citas
 
 _CLAUDE.md: inicio con resumen y estadísticas; disponibilidad online/presencial con duraciones, cuadrícula semanal, modo vacaciones, descanso entre sesiones y periodos de vacaciones; CRUD de citas con listado paginado, filtros y calendario._
 
@@ -330,17 +326,25 @@ _CLAUDE.md: modalidad, calendario según la disponibilidad, nombre + teléfono (
 
 ---
 
-## [ ] FASE 19 — Calidad, limpieza y puesta en producción *(nueva, añadida tras la auditoría)*
+## [x] FASE 19 — Calidad, limpieza y puesta en producción *(nueva, añadida tras la auditoría; completada 2026-09-29)*
 
-- [ ] F19.1 Quitar `innerHTML` de los JS de los temas (`blog-ajax.js` ×10, `tema-aurora/main.js`, `tema-base/reserva.js`)
-- [ ] F19.2 Borrar código muerto
-  - [ ] `TemaController::actualizarLogo()` / `preview()`, sus rutas y `dashboard/temas/preview.blade.php`
-  - [ ] `welcome.blade.php`, `public/placeholder.blade.php`, Vite/Tailwind/PostCSS, `resources/css` y `resources/js`
-  - [ ] Scripts de un solo uso en `database/seeders/` (`scaffold-themes`, `patch-navs`, `apply-phrases`, `gen-sql`)
-  - [ ] `public/sw.js` + bloque que da de baja el service worker (cuando ya no haga falta)
-- [ ] F19.3 Tests automáticos (login, protección de rutas, solapamientos, huecos, reserva pública, PDF)
-- [ ] F19.4 SEO técnico: `robots.txt` que bloquee el panel, `sitemap.xml` y canonical
-- [ ] F19.5 `.env.example` con `es` / `Europe/Madrid`
-- [ ] F19.6 README propio del proyecto (instalación, despliegue y cómo crear temas)
-- [ ] F19.7 Limitar `?preview_theme` a sesiones autenticadas
-- [ ] F19.8 Ficheros de seguimiento `prompts.md` / `tareas.md` que pide CLAUDE.md
+- [x] **F19.1 Quitar `innerHTML` de los JS de los temas.** Los 10 `blog-ajax.js` (uno por tema) y `tema-aurora/assets/js/main.js` vacían con `replaceChildren()` e insertan el fragmento del blog con `DOMParser` + `document.importNode()`. `tema-base/assets/js/reserva.js` vacía sus contenedores con `replaceChildren()`. Verificado: `grep -rnE "innerHTML|outerHTML|insertAdjacentHTML|\bvar\s|alert\(|confirm\(|prompt\(" themes public/js` sin resultados.
+- [x] **F19.2 Código muerto y ficheros de andamiaje eliminados**
+  - [x] `TemaController::actualizarLogo()` / `preview()`, sus rutas (`dashboard.temas.logo`, `dashboard.temas.preview`) y `dashboard/temas/preview.blade.php` (sin referencias; el logo ya lo gestiona `LogoController` y la previsualización usa `?preview_theme`). Imports (`Profile`, `ImagenOptimizer`, `Storage`) limpiados del controlador.
+  - [x] `welcome.blade.php`, `public/placeholder.blade.php`, `vite.config.js`, `tailwind.config.js`, `postcss.config.js`, `package.json`, `resources/css/`, `resources/js/` y `node_modules/` eliminados (no quedaba ningún `@vite` fuera de `welcome.blade.php`).
+  - [x] Scripts de un solo uso en `database/seeders/` (`scaffold-themes.php`, `patch-navs.php`, `apply-phrases.php`, `gen-sql.php`) eliminados — eran scripts sueltos (sin `namespace`), no clases `Seeder`, y apuntaban a una ruta `cms/` que ya no existe.
+  - [x] **[EXTRA]** Import muerto de `InstallerService` en `routes/web.php` eliminado (detectado por el linter del editor).
+  - [x] `public/sw.js` y el bloque de `dashboard/layout.blade.php` que lo registra: **se mantienen**, decisión deliberada — siguen limpiando el service worker antiguo de navegadores que ya lo tuvieran registrado en desarrollo; retirarlos ahora dejaría el SW atascado para siempre en esos navegadores.
+- [x] **F19.3 Tests automáticos.** `phpunit.xml` configurado con SQLite en memoria (aislado de la BD real `cms_app` y de `storage/app/installed.lock`). 36 tests en verde (`php artisan test`):
+  - `tests/Unit/Support/PhoneHelperTest.php`, `tests/Unit/Services/CitaServiceSlotsTest.php` (los dos ejemplos exactos de CLAUDE.md).
+  - `tests/Feature/Auth/LoginTest.php`, `tests/Feature/RouteProtectionTest.php` (recorre `Route::getRoutes()` para todas las `dashboard.*`).
+  - `tests/Feature/Disponibilidad/ReservaServiceTest.php`, `tests/Feature/Public/ReservaPublicaTest.php`, `tests/Feature/ProteccionDatos/PdfTest.php`, `tests/Feature/SeoTest.php`, `tests/Feature/ThemePreviewTest.php`.
+  - **[EXTRA] Correcciones necesarias para poder escribir los tests:** `database/factories/UserFactory.php` usaba los campos (`name`, `email_verified_at`) del `User` por defecto de Laravel, no los reales (`nombre`, `apellidos`, `telefono`) — corregido.
+  - **[EXTRA] Bug real corregido:** `ReservaService::periodosVacacionesCargados()` cacheaba los periodos de vacaciones en una variable `static` (persiste entre peticiones en `php artisan serve`/colas/Octane); un periodo añadido o borrado no se aplicaba hasta reiniciar el proceso. Cambiado a una propiedad de instancia (`$this->periodosCache`).
+- [x] **F19.4 SEO técnico.** `public/robots.txt` estático (bloqueaba nada) sustituido por `GET /robots.txt` (`Public\SeoController@robots`): bloquea `/panel-psicologa`, `/acceso-psicologa`, `/instalacion`, `/recuperar-pwd` y enlaza el sitemap. `GET /sitemap.xml` (`Public\SeoController@sitemap`) genera las URLs activas según el modo y las funcionalidades, más los artículos publicados. `<link rel="canonical">` (`resources/views/_shared/canonical.blade.php`) incluido en el `<head>` de los 11 temas.
+- [x] **F19.5 `.env.example`** reescrito: `APP_NAME=PsicoCMS`, `es`/`Europe/Madrid`/`es_ES`, `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`, `DB_CONNECTION=mysql` con comentario de que el asistente los rellena.
+- [x] **F19.6 README propio** (instalación en XAMPP, asistente, despliegue en hosting compartido, `.htaccess` de raíz **[EXTRA, nuevo]**, copias de seguridad, Gmail, cómo crear un tema y cómo ejecutar los tests).
+- [x] **F19.7 `?preview_theme` restringido a sesión iniciada.** `ThemeManager::previewSlug()`/`previewMode()` comprueban `auth()->check()` antes de leer la query. Cubierto por `ThemePreviewTest`.
+- [x] **F19.8 Ficheros de seguimiento.** Decisión documentada en `CLAUDE.md` (Otras consideraciones): `project-map.md` sustituye a `tareas.md`.
+
+**Nota de entorno (no es código del proyecto):** al levantar `php artisan serve` para verificar la fase, MariaDB no arrancaba (tabla de sistema `mysql.db` marcada `crashed`, y tras repararla, una tabla interna de phpMyAdmin con una página InnoDB corrupta abortaba el arranque). Se reparó `mysql.db` con `aria_chk` y, al seguir dando "table is full", se reconstruyó con el esquema oficial de MariaDB conservando sus filas; se sacaron de `data/` los ficheros corruptos de `phpmyadmin.pma__recent` (ajenos a la app); se volvió a crear el usuario `cms_app` con la misma contraseña que ya tenía en `.env`. La base de datos `cms_app` de la aplicación no se tocó. Verificado con `php artisan serve`: `/`, `/blog`, `/preguntas-frecuentes`, `/pide-cita`, `/politica-de-privacidad`, `/robots.txt`, `/sitemap.xml` → 200; `/panel-psicologa` sin sesión → 302 a `/acceso-psicologa`.

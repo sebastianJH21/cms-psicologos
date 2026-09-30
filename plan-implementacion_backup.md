@@ -1,10 +1,10 @@
 # Plan de implementación — PsicoCMS
 
-> **Destinatario:** agente de IA (Claude Code) que mantiene y continúa PsicoCMS.
+> **Destinatario:** agente de IA (Claude Code con Claude Sonnet) que debe construir PsicoCMS desde cero, fase a fase.
 > **Fuente de requisitos:** [CLAUDE.md](CLAUDE.md). Este plan detalla cada fase de CLAUDE.md, la divide en tareas y subtareas con identificadores estables (`F{fase}.{tarea}.{subtarea}`) y define los criterios de aceptación.
-> **Estado del proyecto:** ver [project-map.md](project-map.md) (usa los mismos identificadores; ahí se marca qué está `[x]` hecho y qué `[ ]` falta).
+> **Estado del proyecto:** ver [project-map.md](project-map.md) (usa los mismos identificadores).
 >
-> Este plan se ha reconstruido por ingeniería inversa, revisando el código real (modelos, servicios, controladores, rutas, vistas de los 11 temas y configuración). Las funcionalidades que existen en el código pero no estaban pedidas en CLAUDE.md se marcan **[EXTRA]**. Última revisión completa: 2026-09-29.
+> Este plan se ha reconstruido a partir del código existente (ingeniería inversa). Las funcionalidades que existen en el código pero no estaban en CLAUDE.md se marcan con la etiqueta **[EXTRA]**. Las que están incompletas o tienen errores se marcan con **[PENDIENTE]**.
 
 ---
 
@@ -30,7 +30,6 @@
 - No romper funcionalidades anteriores. Antes de cerrar una fase, repasar el checklist de la [sección 10](#10-checklist-de-verificación-por-fase).
 - Ante una duda: releer CLAUDE.md y este plan. Si sigue la duda, preguntar. Si es algo menor, elegir la opción más simple que no rompa nada.
 - Guardar cada prompt nuevo del usuario en `prompts.md` (según CLAUDE.md).
-- Antes de marcar una tarea como terminada en `project-map.md`, comprobar que el fichero real coincide con lo descrito aquí (no fiarse solo de un commit antiguo): puede haber cambios sin confirmar en el árbol de trabajo.
 
 ### Reglas de código (obligatorias en todas las fases)
 
@@ -61,15 +60,15 @@
 | Frontend | HTML5, CSS3 nativo, JavaScript nativo |
 | PDF | `barryvdh/laravel-dompdf` ^3.1 |
 | Imágenes | `intervention/image` ^3.11 (redimensionar + convertir a WebP) |
-| Saneado HTML | `mews/purifier` ^3.4 (config en `config/purifier.php`, perfil `blog`) |
+| Saneado HTML | `mews/purifier` ^3.4 (config en `config/purifier.php`) |
 | Editor WYSIWYG | Jodit 4.7.6 copiado en `public/vendor/jodit/` (desde cdnjs, `es2021/jodit.min.{css,js}`) |
-| Calendario | Calendar.js (calendarjs.com) copiado en `public/vendor/calendarjs/` |
+| Calendario | Calendar.js (calendarjs.com) + `lemonade.min.js` copiados en `public/vendor/calendarjs/` |
 | Iconos | Font Awesome copiado en `public/vendor/fontawesome/` (css + webfonts) |
-| Email | Symfony Mailer (el que usa Laravel) con transporte SMTP creado en tiempo de ejecución a partir de los ajustes guardados en `settings` |
+| Email | Symfony Mailer (el que usa Laravel) con transporte SMTP creado en tiempo de ejecución a partir de los ajustes |
 
-Entorno `.env` esperado en producción: `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid`, `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync` (funcionan antes de que exista la base de datos, algo que necesita el asistente de instalación). **F19.5 (terminado):** `.env.example` ya usa estos valores en español.
+Entorno `.env`: `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid`, `SESSION_DRIVER=database`.
 
-> No se usan Vite ni Tailwind. Los ficheros de andamiaje de Laravel (`vite.config.js`, `tailwind.config.js`, `resources/css`, `resources/js`, `welcome.blade.php`, `public/placeholder.blade.php`) siguen en el repo y sobran (ver F19.2).
+> No se usan Vite ni Tailwind. Los ficheros de andamiaje de Laravel (`vite.config.js`, `tailwind.config.js`, `resources/css`, `resources/js`, `welcome.blade.php`) sobran (ver F19).
 
 ---
 
@@ -123,11 +122,10 @@ storage/app/installed.lock        (marca de instalación completada)
 
 - **Usuario único.** Solo existe la psicóloga (tabla `users`, 1 fila). No hay registro público. `User::first()` es "la psicóloga".
 - **Datos públicos** en la tabla `profile` (1 fila, `Profile::singleton()`); el nombre y los apellidos públicos salen de `users`.
-- **Ajustes** en la tabla `settings` clave/valor (valor JSON) agrupados por `group`. Acceso con `Setting::get($key, $default)` / `Setting::set($key, $value, $group)`. `get()` devuelve el valor por defecto si la BD aún no existe (protegido con `try/catch`), para que el asistente pueda arrancar antes de que exista la conexión.
-- **Temas plug and play, sin herencia entre ellos.** `ThemeManager` lee `themes/*/theme.json` (campos `slug`, `name`, `description`, `supports`, `color_palette`, `image_slots`, `preview_colors`). `AppServiceProvider` registra el namespace de vistas `theme::` apuntando a `themes/<activo>/views` y asigna `PublicLayoutComposer` a `theme::*`. Los assets de un tema se sirven con `/theme-assets/{slug}/{path}` (`ThemeAssetsController`, con control de path traversal). Cada uno de los 11 temas es una carpeta completa e independiente (no hay un tema "base" del que los demás hereden vistas); cada uno trae su propio `landing`, `multipage/*` y `partials/section-*`.
+- **Ajustes** en la tabla `settings` clave/valor (valor JSON) agrupados por `group`. Acceso con `Setting::get($key, $default)` / `Setting::set($key, $value, $group)`. `get()` devuelve el valor por defecto si la BD aún no existe, para que el asistente pueda arrancar.
+- **Temas plug and play.** `ThemeManager` lee `themes/*/theme.json`. `AppServiceProvider` registra el namespace de vistas `theme::` apuntando a `themes/<activo>/views` y asigna `PublicLayoutComposer` a `theme::*`. Los assets de un tema se sirven con `/theme-assets/{slug}/{path}` (`ThemeAssetsController`, con control de path traversal).
 - **Instalación.** `installed.lock` en `storage/app`. Middleware `installed` (redirige a `/instalacion` si falta) y `not_installed` (bloquea el asistente tras instalar).
-- **Ficheros privados** (historias y avatar) en el disco `local` (no público), servidos por rutas autenticadas. Ficheros públicos (foto de perfil, blog, imágenes de tema, logo) en el disco `public`.
-- **Previsualización de temas restringida a sesión iniciada (F19.7, terminado).** `ThemeManager::previewSlug()`/`previewMode()` solo leen `?preview_theme=` y `?preview_mode=` si `auth()->check()` es `true`; un visitante sin sesión los ve ignorados.
+- **Ficheros privados** (historias y avatar) en el disco `local` (no público), servidos por rutas autenticadas. Ficheros públicos (foto, blog, imágenes de tema, logo) en el disco `public`.
 
 ---
 
@@ -145,15 +143,15 @@ storage/app/installed.lock        (marca de instalación completada)
 | `disponibilidades` | modalidad, dia_semana (0=domingo…6), hora_inicio, hora_fin, activa | Único (modalidad, dia_semana, hora_inicio). Cada fila es un hueco reservable. |
 | `periodos_vacaciones` | fecha_inicio, fecha_fin | |
 | `pacientes` | nombre, apellidos, dni (único, nullable), telefono (único, normalizado), email, fecha_nacimiento, genero, direccion, motivo_inicial, notas, origen (`publica`/`manual`), softDeletes | El teléfono es el identificador de negocio. |
-| `citas` | paciente_id (FK nullOnDelete), nombre_provisional, telefono_provisional, email_provisional, modalidad, fecha_inicio, fecha_fin, motivo, estado (`pendiente`,`confirmada`,`realizada`,`no_asistio`; cancelar = soft delete), notas_internas, origen, softDeletes | Índices en fecha_inicio, estado y paciente_id. |
-| `eventos` | titulo, descripcion, color, fecha_inicio, fecha_fin, all_day, ubicacion | **[EXTRA]** Eventos del calendario que no son citas. No tienen ningún campo que bloquee huecos de reserva (ver optimización 9.2). |
+| `citas` | paciente_id (FK nullOnDelete), nombre_provisional, telefono_provisional, email_provisional, modalidad, fecha_inicio, fecha_fin, motivo, estado (`pendiente`,`confirmada`,`cancelada`,`realizada`,`no_asistio`), notas_internas, origen, softDeletes | Índices en fecha_inicio, estado y paciente_id. |
+| `eventos` | titulo, descripcion, color, fecha_inicio, fecha_fin, all_day, ubicacion | **[EXTRA]** Eventos del calendario que no son citas. |
 | `historias` | paciente_id (FK cascade), fecha_sesion, titulo, contenido (HTML), softDeletes | |
 | `historia_archivos` | historia_id (FK cascade), nombre_original, ruta, tipo (`imagen`/`pdf`), mime_type, tamanio | |
 | `faqs` | pregunta, respuesta, orden, activa | |
 | `categorias_blog` | nombre, slug (único), descripcion, orden | |
 | `articulos` | categoria_id (FK nullOnDelete), titulo, slug (único), extracto, contenido, imagen_path, estado (`borrador`/`publicado`/`archivado`), published_at, meta_title, meta_description, softDeletes | |
 
-Seeders: categorías de blog por defecto y ajustes iniciales (`features.*`, plantilla de protección de datos). No hay seeder de datos de demostración para probar el inicio del panel con volumen (ver optimización 9.11).
+Seeders: `CategoriasBlogSeeder` (Ansiedad, Depresión, Autoestima, Relaciones, Mindfulness, Trauma) y `DemoDataSeeder` (datos de prueba: 50 pacientes, 200 citas, 100 historias, artículos, FAQs, servicios, especialidades).
 
 ---
 
@@ -163,11 +161,11 @@ Seeders: categorías de blog por defecto y ajustes iniciales (`features.*`, plan
 |---|---|
 | theme | `active_theme`, `theme_mode` (`landing`/`multipage`) |
 | branding | `branding.logo_path`, `branding.logo_icon` |
-| disponibilidad | `duracion_sesion_presencial_min`, `duracion_sesion_online_min`, `hora_apertura_manana`, `hora_cierre_manana`, `hora_apertura_tarde`, `hora_cierre_tarde`, `descanso_activo_presencial`, `descanso_min_presencial`, `descanso_activo_online`, `descanso_min_online`, `modo_vacaciones`, `mensaje_vacaciones`, `dias_adelante` (todas con prefijo `disponibilidad.`). Heredadas (de antes de F4.5.7, todavía leídas como último recurso): `duracion_sesion_min`, `hora_apertura`, `hora_cierre` |
-| features | `features.blog_enabled`, `features.reservas_enabled`, `features.faq_enabled`, `features.servicios_enabled`, `features.sobre_mi_enabled` (son las únicas 5 funcionalidades activables; no existen interruptores para especialidades, precios, redes sociales, mapa o RSS) |
+| disponibilidad | `duracion_sesion_presencial_min`, `duracion_sesion_online_min`, `hora_apertura_manana`, `hora_cierre_manana`, `hora_apertura_tarde`, `hora_cierre_tarde`, `descanso_activo_presencial`, `descanso_min_presencial`, `descanso_activo_online`, `descanso_min_online`, `modo_vacaciones`, `mensaje_vacaciones`, `dias_adelante` (todas con prefijo `disponibilidad.`). Heredadas: `duracion_sesion_min`, `hora_apertura`, `hora_cierre` |
+| features | `features.blog_enabled`, `features.reservas_enabled`, `features.faq_enabled`, `features.servicios_enabled`, `features.sobre_mi_enabled` |
 | mail | `mail.smtp_host`, `mail.smtp_port`, `mail.smtp_user`, `mail.smtp_password` (cifrada con `Crypt`), `mail.from_address`, `mail.notif_enabled` |
-| social | `social.{facebook,instagram,linkedin,twitter,youtube,tiktok,whatsapp}` (7 redes) |
-| phrases | `phrases.*` (25 claves en 8 grupos: hero, about, servicios, especialidades, planes, blog, faq, cita) |
+| social | `social.{facebook,instagram,linkedin,twitter,youtube,tiktok,whatsapp}` |
+| phrases | `phrases.*` (25 claves: hero, about, servicios, especialidades, planes, blog, faq, cita) |
 | proteccion_datos | `proteccion_datos.plantilla_html` |
 | notifications | `notifications.bookings_last_seen_at` |
 
@@ -198,13 +196,13 @@ Seeders: categorías de blog por defecto y ajustes iniciales (`features.*`, plan
 | POST | `/logout` | auth |
 | GET/POST | `/recuperar-pwd` | only_local **[EXTRA]** |
 
-**Panel** (`/panel-psicologa/*`, middleware `installed` + `auth`, nombres `dashboard.*`): inicio, notificaciones, buscador, ayuda, perfil-privado (+ avatar), disponibilidad (+ periodos-vacaciones), citas (resource + estado), calendario (+ eventos, crear, actualizar, eventos-extra), pacientes (resource + buscar, restaurar, citas, historias anidadas, proteccion-datos.pdf), historias (listado general), configuracion/{perfil, general (+ feature toggle), redes-sociales, email-notificaciones, servicios, terapias, planes, proteccion-datos}, preferencias/tema, imagenes, logo, frases-publicas, frases/{seccion}, temas (+ activar), blog/{articulos, categorias, upload-imagen}, faqs (+ reordenar). También `robots.txt` y `sitemap.xml` (públicas, F19.4).
+**Panel** (`/panel-psicologa/*`, middleware `installed` + `auth`, nombres `dashboard.*`): inicio, notificaciones, buscador, ayuda, perfil-privado, disponibilidad (+ periodos-vacaciones), citas (resource + estado), calendario (+ eventos, crear, actualizar, eventos-extra), pacientes (resource + buscar, restaurar, citas, historias anidadas, proteccion-datos.pdf), historias (listado general), configuracion/{perfil, general, redes-sociales, email-notificaciones, servicios, terapias, planes, proteccion-datos}, preferencias/tema, imagenes, logo, frases-publicas, frases/{seccion}, temas, blog/{articulos, categorias, upload-imagen}, faqs (+ reordenar).
 
 ---
 
 ## 7. Componentes reutilizables
 
-Ya construidos en la Fase 3 y usados en todas las pantallas del panel:
+Constrúyelos en la Fase 3 y úsalos en todas las pantallas del panel:
 
 | Componente | Fichero | Uso |
 |---|---|---|
@@ -214,7 +212,7 @@ Ya construidos en la Fase 3 y usados en todas las pantallas del panel:
 | Breadcrumbs | `dashboard/partials/breadcrumbs.blade.php` | |
 | Mensajes flash | `dashboard/partials/flash.blade.php` + `js/dashboard/flash.js` | `success` / `error` con cierre automático |
 | Modal de confirmación | `dashboard/partials/modal-confirm.blade.php` + `js/dashboard/modal.js` | Cualquier `form[data-confirm]` abre el modal en lugar de enviarse |
-| Modal de tema | `dashboard/partials/modal-tema.blade.php` + `js/dashboard/theme-toggle.js` | Claro/oscuro + color primario (11 colores) |
+| Modal de tema | `dashboard/partials/modal-tema.blade.php` + `js/dashboard/theme-toggle.js` | Claro/oscuro + color primario |
 | Editor Jodit | `dashboard/blog/partials/editor-jodit.blade.php` + `js/dashboard/jodit-init.js` | `textarea[data-wysiwyg]` |
 | Selector de iconos | `dashboard/configuracion/partials/icon-picker.blade.php` + `js/dashboard/icon-picker.js` | Servicios, especialidades, logo |
 | Paginación | `vendor/pagination/dashboard.blade.php` | |
@@ -225,7 +223,7 @@ Ya construidos en la Fase 3 y usados en todas las pantallas del panel:
 
 ## 8. Fases de implementación
 
-Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición para dar la tarea por buena. El estado real (hecho / pendiente) vive en `project-map.md`.
+Formato de cada tarea: **ID — título**. Archivos: ficheros principales. "Criterio de aceptación": condición para dar la tarea por buena.
 
 ---
 
@@ -234,7 +232,8 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 **Objetivo:** tener el esqueleto de Laravel listo, con dependencias, assets de terceros y la BD base.
 
 - **F0.1 — Crear el proyecto Laravel 11** con PHP 8.2 y las dependencias de la sección 2.
-- **F0.2 — Configuración regional:** `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid`, `SESSION_DRIVER=file`, también en `.env.example`.
+  **Criterio de aceptación:** `composer install` sin errores; `php artisan about` funciona.
+- **F0.2 — Configuración regional:** `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid`, `SESSION_DRIVER=database`, también en `.env.example`.
 - **F0.3 — Copiar librerías de terceros** a `public/vendor/`: Font Awesome (desde la carpeta de fuentes del tema base), Jodit 4.7.6 y Calendar.js.
 - **F0.4 — Migraciones base:** `users` (con los campos de la sección 4), `sessions`, `cache`, `jobs`, `profile`, `settings`.
 - **F0.5 — Modelos base:** `User`, `Profile` (con `singleton()`), `Setting` (`get`/`set` con casting JSON y protección si no hay BD).
@@ -295,7 +294,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
   - Grupo **Gestión Web**: Información pública, Servicios, Especialidades, Planes y precios, Preguntas frecuentes, Frases públicas, Imágenes, Logo, Temas.
   - Grupo **Configuración**: Disponibilidad, Protección de datos, Email y notificaciones, Redes sociales, General.
   - Grupos desplegables (`sidebar.js`) que se abren solos si contienen la ruta activa.
-- **F3.4 — Header:** buscador, botón Ayuda, campana con contador, botón de tema y avatar/nombre.
+- **F3.4 — Header:** buscador, botón Ayuda, campana con contador, botón de tema y avatar/nombre (enlaces que se completan en F14/F15).
 - **F3.5 — Componentes comunes:** flash, modal de confirmación, breadcrumbs, paginación y footer.
 - **F3.6 — Responsive:** en móvil la sidebar se abre como panel deslizante con fondo oscuro (`responsive.css`).
 
@@ -339,7 +338,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 - F4.5.4 **[EXTRA]** Cambio rápido de estado desde el listado/detalle (`PATCH citas/{cita}/estado`, `cita-estado.js`).
 - F4.5.5 **[EXTRA]** Botón "Confirmar por WhatsApp" con mensaje prerrellenado (`whatsapp_confirmacion_url()`).
 - F4.5.6 Borrar = cancelar (soft delete) con modal de confirmación.
-- F4.5.7 **Duración por modalidad en citas manuales.** `StoreCitaRequest` y `UpdateCitaRequest` calculan `fecha_fin` con `CitaService::duracionPorModalidad($modalidad)` (usa `duracionPresencial()`/`duracionOnline()` según la modalidad enviada), en vez de la clave heredada `disponibilidad.duracion_sesion_min`. `CalendarioController@index` y `CitaController@create/edit` pasan ambas duraciones a la vista; el JS del formulario (`form.blade.php`) y del calendario (`calendario.js`, variables `cfg.duracionPresencial`/`cfg.duracionOnline`) recalculan la hora de fin al cambiar la modalidad.
+- F4.5.7 **Duración por modalidad en citas manuales.** `StoreCitaRequest` y `UpdateCitaRequest` calculan `fecha_fin` con el nuevo `CitaService::duracionPorModalidad($modalidad)` (usa `duracionPresencial()`/`duracionOnline()` según la modalidad enviada), en vez de la clave heredada `disponibilidad.duracion_sesion_min`. `CalendarioController@index` y `CitaController@create/edit` pasan ambas duraciones a la vista; el JS del formulario (`form.blade.php`) y del calendario (`calendario.js`) recalculan la hora de fin al cambiar la modalidad. Se eliminaron `CitaService::duracionSesion()` y `calcularFechaFin()` (sin usos) y la clave `duracionSesion` muerta de `Public\CitaController@datosVista` y de los 11 temas (nunca se leía en `reserva.js`, el paciente solo ve horas de inicio fijas).
 
 **Criterio de aceptación:** La psicóloga configura la disponibilidad y los huecos se reflejan en el panel y en la web. No se pueden crear citas solapadas. Los periodos de vacaciones bloquean los días.
 
@@ -360,7 +359,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 
 ### FASE 6 — Blog y editor WYSIWYG
 
-- **F6.1 — Categorías:** migración, modelo, CRUD (sin vista de detalle), slug automático (`SlugService`, único), orden. Seeder con categorías por defecto.
+- **F6.1 — Categorías:** migración, modelo, CRUD (sin vista de detalle), slug automático (`SlugService`, único), orden. Seeder con 6 categorías por defecto.
 - **F6.2 — Artículos:** CRUD con título, slug, extracto, contenido, imagen destacada (optimizada), categoría, estado (borrador/publicado/archivado), fecha de publicación **[EXTRA]** y SEO: meta title y meta description **[EXTRA]**. Listado con búsqueda y filtros. Vista previa de detalle en el panel.
 - **F6.3 — Jodit:** copiado en local, inicializado en `textarea[data-wysiwyg]` (`jodit-init.js`) en español. Se usa en artículos, sobre mí, historias y la plantilla de protección de datos. `css/wysiwyg.css` para el contenido.
 - **F6.4 — [EXTRA] Subir imágenes dentro del editor** (`POST blog/upload-imagen`), optimizadas.
@@ -375,7 +374,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 
 - **F7.1 — Migración y modelo `Paciente`:** teléfono único y normalizado, DNI **[EXTRA]**, fecha de nacimiento, género, dirección, motivo inicial, notas, origen, soft deletes, `scopeBuscar()` y `nombre_completo`.
 - **F7.2 — `PacienteService`:** `findOrCreateByPhone()` con `lockForUpdate` (si el paciente estaba en la papelera, lo restaura) **[EXTRA]**, crear, actualizar, eliminar, restaurar.
-- **F7.3 — CRUD de pacientes:** listado paginado con búsqueda y filtro por origen (AJAX), alta manual, edición y detalle con las últimas citas y las historias más recientes.
+- **F7.3 — CRUD de pacientes:** listado paginado con búsqueda y filtro por origen (AJAX), alta manual, edición y detalle con las últimas citas y las 3 historias más recientes.
 - **F7.4 — [EXTRA] Papelera** de pacientes (soft delete + restaurar).
 - **F7.5 — [EXTRA] Historial de citas** del paciente (`pacientes/{paciente}/citas`), incluidas las canceladas.
 - **F7.6 — Buscador de pacientes** (`GET pacientes/buscar`, JSON). Al elegir uno en el formulario de cita se rellenan los datos.
@@ -425,7 +424,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 
 ### FASE 12 — Temas visuales
 
-- **F12.1 — `ThemeManager`:** descubre los temas por su `theme.json` y activa tema + modo.
+- **F12.1 — `ThemeManager`:** descubre los temas por su `theme.json` (`slug`, `name`, `description`, `supports`, `color_palette`, `image_slots`, `preview_colors`) y activa tema + modo.
 - **F12.2 — Namespace `theme::`** y `PublicLayoutComposer` (profile, user, features, social, themeSlug, themeMode).
 - **F12.3 — `ThemeAssetsController`** para servir los assets de `themes/<slug>/assets` de forma segura.
 - **F12.4 — Temas:** CLAUDE.md pide 5. **[EXTRA]** Hay 11: `tema-base` (Tierra Cálida, réplica del tema visual base), `tema-aurora`, `tema-bold`, `tema-clinica`, `tema-minimal`, `tema-modern`, `tema-natural`, `tema-organico`, `tema-sage`, `tema-violeta`, `tema-warm`. Todos con las mismas vistas: `landing`, `multipage/*` y `partials/section-*`.
@@ -437,7 +436,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 
 - **F13.1 — `ImagenSlotResolver`:** resuelve la imagen de cada hueco (`hero`, `sobre-mi`, `servicios-bg`, `blog-bg`) con esta prioridad: imagen subida compartida (`theme-overrides/shared`) → subida antigua por tema → imagen por defecto del tema.
 - **F13.2 — Pantalla de imágenes:** vista previa de cada hueco, subir (optimizada según el hueco) y restaurar la imagen por defecto.
-- **F13.3 — [EXTRA] Logo y favicon** (`/panel-psicologa/logo`): elegir imagen, icono de Font Awesome (más de 100 disponibles) o ninguno; se usa en los temas (`logo_data()`) y como favicon (`_shared/favicon`).
+- **F13.3 — [EXTRA] Logo y favicon** (`/panel-psicologa/logo`): elegir imagen, icono de Font Awesome o ninguno; se usa en los temas (`logo_data()`) y como favicon (`_shared/favicon`).
 
 ---
 
@@ -468,7 +467,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 - **F16.2 — Nav** con enlaces que dependen del modo (anclas en landing, URLs en multipágina) y de las funcionalidades activas. Botones de **llamar**, **WhatsApp** y **pedir cita**. Email en el footer o en contacto.
 - **F16.3 — Modo landing:** una sola página con todas las secciones y scroll suave.
 - **F16.4 — Modo multipágina:** `/` (inicio reducido), `/sobre-mi`, `/servicios` (servicios + especialidades + planes), `/blog`, `/preguntas-frecuentes`, `/pide-cita`. En modo landing esas URLs redirigen a su ancla.
-- **F16.5 — Página "Pide cita":** a un lado, el formulario de reserva; al otro, "¿Dónde estamos?" con dirección, mapa de Google Maps embebido (por lat/lng o por dirección), teléfono y email.
+- **F16.5 — Página "Pide cita":** a un lado, el formulario de reserva; al otro, "¿Dónde estamos?" con dirección, mapa de Google Maps embebido (por lat/lng o por dirección), teléfono y email (`public/_cita_contacto`).
 - **F16.6 — [EXTRA] Política de privacidad** pública (`/politica-de-privacidad`) generada con los datos de la psicóloga.
 - **F16.7 — [EXTRA] Ruta alternativa de `/storage`** para hostings en los que el symlink no funciona.
 
@@ -481,7 +480,7 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 - **F17.3 — Formulario:** nombre (obligatorio, solo letras), teléfono (obligatorio, al menos 9 dígitos, normalizado) y motivo (opcional).
 - **F17.4 — [EXTRA] Anti-spam y legalidad:** campo trampa (`website`), pregunta de seguridad (suma cifrada con caducidad de 1 h), aceptación de la política de privacidad y límite de 3 reservas por hora por IP (desactivado en local).
 - **F17.5 — `ReservaService::registrar()`** en una transacción: vuelve a comprobar los solapamientos, crea o recupera el paciente por teléfono y **[EXTRA]** impide más de una cita por paciente y día.
-- **F17.6 — Modal de éxito** con el resumen de la cita y un botón "Añadir a Google Calendar" (enlace `calendar.google.com/calendar/render?action=TEMPLATE…`, con `ctz=Europe/Madrid`, sin API).
+- **F17.6 — Modal de éxito** con el resumen de la cita y un botón "Añadir a Google Calendar" (enlace `calendar.google.com/calendar/render?action=TEMPLATE…`, sin API).
 - **F17.7 — Email a la psicóloga** (`NuevaCitaMail`, vista `emails/nueva-cita`) con un transporte SMTP creado con los ajustes guardados. Se envía a la propia cuenta con el alias `+notificaciones` **[EXTRA]**. Si falla, se registra en el log y la reserva no se interrumpe.
 
 ---
@@ -496,23 +495,22 @@ Formato de cada tarea: **ID — título**. "Criterio de aceptación": condición
 
 ---
 
-### FASE 19 — Calidad, limpieza y puesta en producción *(añadida tras la auditoría; terminada el 2026-09-29)*
+### FASE 19 — Calidad, limpieza y puesta en producción *(añadida tras la auditoría)*
 
-- **F19.1 — Quitar `innerHTML` de los JS de los temas** (norma de CLAUDE.md). Los 10 `themes/*/assets/js/blog-ajax.js` y `themes/tema-aurora/assets/js/main.js` ahora vacían con `replaceChildren()` e insertan el fragmento del blog con `DOMParser` + `document.importNode()`. `themes/tema-base/assets/js/reserva.js` vacía sus contenedores con `replaceChildren()`. Verificado sin coincidencias en todo `themes/` y `public/js/`.
-- **F19.2 — Borrado de código muerto:**
-  - `TemaController::actualizarLogo()` y `preview()`, las rutas `dashboard.temas.logo` / `dashboard.temas.preview` y la vista `dashboard/temas/preview.blade.php` (el logo lo gestiona `LogoController`; la previsualización usa `?preview_theme`).
-  - `resources/views/welcome.blade.php`, `resources/views/public/placeholder.blade.php`, `resources/css`, `resources/js`, `vite.config.js`, `tailwind.config.js`, `postcss.config.js`, `package.json` y `node_modules/`.
-  - Scripts de un solo uso en `database/seeders/` (`scaffold-themes.php`, `patch-navs.php`, `apply-phrases.php`, `gen-sql.php`, que apuntaban a una ruta antigua `cms/`): eliminados.
-  - Import muerto de `InstallerService` en `routes/web.php`.
-  - **Decisión:** `public/sw.js` y el bloque del layout que da de baja el service worker **se mantienen** (no se han retirado): siguen limpiando el SW antiguo de los navegadores que ya lo tuvieran registrado durante el desarrollo; retirarlos ahora dejaría ese SW atascado para siempre en esos navegadores. Revisar de nuevo antes de un despliegue público real.
-- **F19.3 — Tests automáticos** (antes solo había `ExampleTest` de plantilla). `phpunit.xml` configurado con SQLite en memoria (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`), aislado de la base de datos real y del `storage/app/installed.lock` del proyecto instalado. 36 tests en verde: `PhoneHelperTest`, `CitaServiceSlotsTest` (los dos ejemplos exactos de CLAUDE.md: 50+10→9:00/10:00/11:00…, 50+0→9:00/9:50/10:40…), `LoginTest` (3 campos, límite de intentos, logout), `RouteProtectionTest` (recorre todas las rutas `dashboard.*` vía `Route::getRoutes()`), `ReservaServiceTest` (huecos, solapamientos, periodo de vacaciones, modo vacaciones, 1 cita por paciente y día), `ReservaPublicaTest` (honeypot, captcha, reserva completa, hueco ocupado), `PdfTest`, `SeoTest` y `ThemePreviewTest`. Se corrigieron dos bloqueos necesarios para poder escribir los tests: `database/factories/UserFactory.php` (usaba los campos `name`/`email_verified_at` del `User` de Laravel por defecto, no los reales `nombre`/`apellidos`/`telefono`) y, **al escribir el test de disponibilidad, se encontró y corrigió un bug real**: `ReservaService::periodosVacacionesCargados()` cacheaba los periodos de vacaciones en una variable `static`, que persiste entre peticiones en un proceso PHP de larga duración (`php artisan serve`, colas, Octane); un periodo añadido o borrado no se aplicaba hasta reiniciar el proceso. Se cambió a una propiedad de instancia.
-- **F19.4 — SEO técnico:** `public/robots.txt` (estático, `Disallow:` vacío) sustituido por la ruta dinámica `GET /robots.txt` (`Public\SeoController@robots`), que bloquea `/panel-psicologa`, `/acceso-psicologa`, `/instalacion` y `/recuperar-pwd`, y enlaza el sitemap. `GET /sitemap.xml` (`Public\SeoController@sitemap`) genera la lista de URLs según el modo (landing/multipágina), las funcionalidades activas y los artículos publicados. `<link rel="canonical">` (`resources/views/_shared/canonical.blade.php`, `url()->current()`) incluido en el `<head>` de los 11 temas.
-- **F19.5 — `.env.example`** reescrito: `APP_NAME=PsicoCMS`, `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid`, `APP_FAKER_LOCALE=es_ES`, `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`, `DB_CONNECTION=mysql` con comentario explicando que el asistente los rellena; sin restos de Vite.
-- **F19.6 — README propio** (sustituye el de Laravel por defecto): requisitos, instalación en XAMPP, asistente de instalación, despliegue en hosting compartido (incluye `.htaccess` de raíz para cuando no se puede cambiar el document root, ya añadido), copias de seguridad, configuración de Gmail, cómo crear un tema nuevo y cómo ejecutar los tests.
-- **F19.7 — `?preview_theme` restringido a sesión iniciada:** `ThemeManager::previewSlug()`/`previewMode()` ahora comprueban `auth()->check()` antes de leer los parámetros de la query. Cubierto por `ThemePreviewTest`.
-- **F19.8 — Ficheros de seguimiento:** decisión documentada en `CLAUDE.md` (sección "Otras consideraciones"): `project-map.md` sustituye a `tareas.md` como fichero de seguimiento del estado de las tareas; no se crean los dos por separado para no duplicar el estado.
+Tareas que el código actual no cumple o que conviene cerrar antes de dar el proyecto por terminado.
 
-**Hallazgo de entorno (no es código del proyecto):** al levantar el servidor local para verificar esta fase, MariaDB no arrancaba: la tabla de sistema `mysql.db` estaba marcada como `crashed` (reparada con `aria_chk -r`) y, tras eso, una tabla interna de phpMyAdmin (`phpmyadmin.pma__recent`) tenía una página InnoDB corrupta que hacía abortar el arranque completo del servidor; sus ficheros se movieron fuera de `data/` (no son datos de la aplicación). Al reintentar, la tabla `mysql.db` reparada no admitía más filas ("table is full"); se reconstruyó con el esquema oficial de MariaDB (`share/mysql_system_tables.sql`) conservando sus filas, y se volvió a crear el usuario `cms_app` con los mismos permisos y contraseña que ya tenía en `.env`. La base de datos `cms_app` de la aplicación no se tocó y conserva sus datos. Con esto, `php artisan serve` sirve correctamente `/`, `/blog`, `/preguntas-frecuentes`, `/pide-cita`, `/politica-de-privacidad`, `/robots.txt` y `/sitemap.xml` (200) y protege el panel (302 a `/acceso-psicologa` sin sesión).
+- **F19.1 — [PENDIENTE] Quitar `innerHTML` de los JS de los temas** (norma de CLAUDE.md): `themes/*/assets/js/blog-ajax.js`, `themes/tema-aurora/assets/js/main.js`, `themes/tema-base/assets/js/reserva.js`. Usar `replaceChildren()` para vaciar y `DOMParser` + `importNode` para insertar el fragmento del blog.
+- **F19.2 — [PENDIENTE] Borrar código muerto:**
+  - `TemaController::actualizarLogo()` y `preview()`, rutas `dashboard.temas.logo` / `dashboard.temas.preview` y la vista `dashboard/temas/preview.blade.php` (el logo lo gestiona `LogoController`; la previsualización usa `?preview_theme`).
+  - `resources/views/welcome.blade.php`, `resources/views/public/placeholder.blade.php`, `resources/css`, `resources/js`, `vite.config.js`, `tailwind.config.js`, `postcss.config.js` y las dependencias npm sin uso.
+  - Scripts de un solo uso en `database/seeders/` (`scaffold-themes.php`, `patch-navs.php`, `apply-phrases.php`, `gen-sql.php`, que además apuntan a una ruta antigua `cms/`): moverlos a `scripts/` o eliminarlos.
+  - `public/sw.js` y el bloque del layout que da de baja el service worker: mantenerlos solo mientras queden navegadores con el SW antiguo registrado y quitarlos después.
+- **F19.3 — [PENDIENTE] Tests automáticos** (hoy solo existen los `ExampleTest`): feature tests de login (3 campos + límite de intentos), protección de rutas del panel, solapamientos (`NoOverlap`, `ReservaService::registrar`), cálculo de huecos con descanso y vacaciones, `PhoneHelper`, reserva pública (captcha, honeypot, 1 cita por día) y PDF de protección de datos.
+- **F19.4 — [PENDIENTE] SEO técnico:** `robots.txt` con `Disallow: /panel-psicologa`, `/acceso-psicologa` y `/instalacion`; `sitemap.xml` dinámico (páginas activas + artículos publicados); `<link rel="canonical">`.
+- **F19.5 — [PENDIENTE] `.env.example`** con `APP_LOCALE=es`, `APP_TIMEZONE=Europe/Madrid` y `APP_FAKER_LOCALE=es_ES` (hoy trae `en`/`UTC`). Opcional: que el asistente también los escriba en el `.env`.
+- **F19.6 — [PENDIENTE] README del proyecto** (sustituir el de Laravel): requisitos, instalación, asistente, despliegue (symlink de storage, permisos, `APP_URL`), cómo añadir un tema nuevo (estructura de `theme.json` + vistas obligatorias) y cómo cargar los datos de prueba.
+- **F19.7 — [PENDIENTE] Restringir `?preview_theme`** a sesiones autenticadas (hoy cualquier visitante puede ver otro tema añadiendo el parámetro).
+- **F19.8 — [PENDIENTE] Ficheros de seguimiento** que exige CLAUDE.md: `prompts.md` (y `tareas.md`, ahora sustituido por `project-map.md`; decidir y actualizar CLAUDE.md).
 
 ---
 
@@ -525,12 +523,11 @@ Mejoras opcionales (no bloquean). El agente debe proponerlas antes de aplicarlas
 3. **Botón "Enviar email de prueba"** en Email y notificaciones, para validar el SMTP sin esperar a una reserva.
 4. **Email de notificación en cola** (`ShouldQueue`), para que la respuesta de la reserva no dependa del SMTP.
 5. **Unificar `User::first()` / `Profile::first()`** en un servicio o view composer compartido (hoy se repite en varios controladores).
-6. **Borrar las claves heredadas** `disponibilidad.duracion_sesion_min`, `hora_apertura` y `hora_cierre` con una migración, ahora que F4.5.7 ya no las necesita como último recurso.
+6. **Borrar las claves heredadas** `disponibilidad.duracion_sesion_min`, `hora_apertura` y `hora_cierre` con una migración, una vez resuelto F4.5.7.
 7. **Normalizar el teléfono en `Cita`** con un mutator, para no depender de que cada FormRequest lo haga.
 8. **Partials comunes a los temas.** Los 11 temas repiten nav, footer y sección de cita casi iguales. Sacar la lógica (URLs, teléfono limpio, WhatsApp) a un view composer o componente Blade y dejar en cada tema solo el marcado.
 9. **CSP y cabeceras de seguridad** (`X-Frame-Options`, `Referrer-Policy`) con un middleware.
 10. **Pedir la contraseña actual** en el perfil privado antes de cambiar la contraseña, el email o el teléfono (son las credenciales de acceso).
-11. **Seeder de datos de demostración** (`DemoDataSeeder`, solo en local) para poder probar el inicio del panel, los filtros de citas y el buscador con volumen realista, sin depender de datos ficticios fijos en el código.
 
 ---
 
@@ -546,5 +543,4 @@ Antes de dar por cerrada cualquier fase:
 - [ ] El CSS nuevo está en su fichero de sección, en `rem`, y se ve bien en móvil y en modo oscuro.
 - [ ] Siguen funcionando: login, crear cita manual, reserva pública, calendario y cambio de tema.
 - [ ] Si la funcionalidad usa disponibilidad: respeta la duración por modalidad, el descanso, el modo vacaciones y los periodos de vacaciones.
-- [ ] No hay cambios sin confirmar en el árbol de trabajo que contradigan el último commit (`git status` / `git diff`).
 - [ ] `project-map.md` actualizado.

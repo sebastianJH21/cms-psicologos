@@ -7,6 +7,8 @@
     <meta name="description" content="@yield('descripcion', \Illuminate\Support\Str::limit(strip_tags($profile?->sobre_mi ?? ''), 160))">
     <meta name="theme-color" content="#c0687e">
 
+    @include('_shared.canonical')
+
     @include('_shared.favicon')
 
     <link rel="stylesheet" href="{{ theme_asset('assets/css/fonts.css', 'tema-base') }}">
