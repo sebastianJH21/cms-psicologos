@@ -3,7 +3,6 @@
     $mensajeVacaciones = $mensajeVacaciones ?? (string) \App\Models\Setting::get('disponibilidad.mensaje_vacaciones', '');
     $tieneOnline = $tieneOnline ?? \App\Models\Disponibilidad::where('modalidad','online')->where('activa',true)->exists();
     $tienePresencial = $tienePresencial ?? \App\Models\Disponibilidad::where('modalidad','presencial')->where('activa',true)->exists();
-    $duracionSesion = $duracionSesion ?? (int) \App\Models\Setting::get('disponibilidad.duracion_sesion_min', 60);
     $telefonoLimpio = preg_replace('/[^+0-9]/', '', $profile?->telefono_publico ?? '');
     $telLimpioWa = preg_replace('/[^0-9]/', '', $profile?->telefono_publico ?? '');
     $waUrl = $social['whatsapp'] ?? ($telLimpioWa ? 'https://wa.me/' . $telLimpioWa : null);

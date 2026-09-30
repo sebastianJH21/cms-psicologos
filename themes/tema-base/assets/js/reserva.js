@@ -63,7 +63,7 @@
     }
 
     async function fetchSlots(fecha) {
-        slotsEl.innerHTML = '';
+        slotsEl.replaceChildren();
         const span = document.createElement('span');
         span.className = 'cita-form__loading-text';
         span.textContent = 'Cargando horarios…';
@@ -85,7 +85,7 @@
         const month = state.cursorDate.getMonth();
         monthEl.textContent = `${meses[month]} ${year}`;
 
-        gridEl.innerHTML = '';
+        gridEl.replaceChildren();
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         let startWeekday = firstDay.getDay();
@@ -139,7 +139,7 @@
     }
 
     function renderSlots(slots) {
-        slotsEl.innerHTML = '';
+        slotsEl.replaceChildren();
         if (slots.length === 0) {
             const p = document.createElement('p');
             p.className = 'cita-form__loading-text';
@@ -182,7 +182,7 @@
             state.fechaSeleccionada = null;
             state.slotSeleccionado = null;
             fechaHoraInput.value = '';
-            slotsEl.innerHTML = '';
+            slotsEl.replaceChildren();
             await fetchDias();
             renderCalendar();
             showStep(2);

@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'feat: proyecto PsicoCMS completo con funcionalidades de fases 0-18 *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(git ls-tree *)",
+      "Bash(git checkout *)",
+      "Bash(php artisan *)",
+      "Bash(php artisan serve --host=localhost --port=8000 > /tmp/laravel-serve.log 2>&1 & *)",
+      "Read(//tmp/**)",
+      "Bash(php -v)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SHOW DATABASES;\")",
+      "Bash(/c/xampp/mysql/bin/mysql_upgrade.exe -u root)",
+      "PowerShell(Get-Process mysqld -ErrorAction SilentlyContinue)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SELECT 1;\")",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Process -FilePath \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysqld.exe\" -ArgumentList \"--defaults-file=C:\\\\xampp\\\\mysql\\\\bin\\\\my.ini\" -WorkingDirectory \"C:\\\\xampp\\\\mysql\\\\bin\" -WindowStyle Hidden)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SELECT 1 AS ok;\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SELECT 1 AS ok; SHOW DATABASES;\")",
+      "Bash(/c/xampp/mysql/bin/mysqld.exe --defaults-file=/c/xampp/mysql/bin/my.ini --console)"
+    ]
+  }
+}

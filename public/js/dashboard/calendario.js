@@ -94,6 +94,11 @@
         return toDatetimeLocal(d);
     };
 
+    const duracionActual = () => {
+        const modalidad = document.getElementById('cal-modalidad').value;
+        return modalidad === 'online' ? cfg.duracionOnline : cfg.duracionPresencial;
+    };
+
     const datetimeLocalToSQL = (val) => {
         if (!val) return '';
         const d = new Date(val);
@@ -463,7 +468,7 @@
         ahora.setSeconds(0, 0);
         ahora.setMinutes(Math.ceil(ahora.getMinutes() / 30) * 30);
         document.getElementById('cal-fecha-inicio').value = toDatetimeLocal(ahora);
-        document.getElementById('cal-fecha-fin').value = addMinutes(toDatetimeLocal(ahora), cfg.duracion);
+        document.getElementById('cal-fecha-fin').value = addMinutes(toDatetimeLocal(ahora), duracionActual());
         calLockFecha();
 
         if (modalNueva) modalNueva.hidden = false;
@@ -916,7 +921,14 @@
     document.getElementById('cal-fecha-inicio').addEventListener('change', () => {
         const inicio = document.getElementById('cal-fecha-inicio').value;
         if (inicio) {
-            document.getElementById('cal-fecha-fin').value = addMinutes(inicio, cfg.duracion);
+            document.getElementById('cal-fecha-fin').value = addMinutes(inicio, duracionActual());
+        }
+    });
+
+    document.getElementById('cal-modalidad').addEventListener('change', () => {
+        const inicio = document.getElementById('cal-fecha-inicio').value;
+        if (inicio) {
+            document.getElementById('cal-fecha-fin').value = addMinutes(inicio, duracionActual());
         }
     });
 
@@ -987,7 +999,7 @@
                     const dt = new Date(s.inicio_iso);
                     const valor = toDatetimeLocal(dt);
                     document.getElementById('cal-fecha-inicio').value = valor;
-                    document.getElementById('cal-fecha-fin').value = addMinutes(valor, cfg.duracion);
+                    document.getElementById('cal-fecha-fin').value = addMinutes(valor, duracionActual());
                     calLockFecha();
                     dispPanel.hidden = true;
                 });

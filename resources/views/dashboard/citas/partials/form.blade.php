@@ -109,20 +109,25 @@
         <label for="fecha_inicio">Fecha y hora *</label>
         <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required readonly value="{{ $fechaInicioValue }}" class="form-input--locked">
         <small class="form-field__hint" id="hint-duracion-cita"
-            data-duracion="{{ $duracion }}"
+            data-duracion-presencial="{{ $duracionPresencial }}"
+            data-duracion-online="{{ $duracionOnline }}"
             data-descanso-presencial="{{ $descansoPresencial ?? 0 }}"
-            data-descanso-online="{{ $descansoOnline ?? 0 }}">Duración: {{ $duracion }} min.</small>
+            data-descanso-online="{{ $descansoOnline ?? 0 }}">Duración: {{ $duracionPresencial }} min.</small>
         <script>
             (function () {
                 const select = document.getElementById('modalidad');
                 const hint   = document.getElementById('hint-duracion-cita');
                 if (!select || !hint) return;
-                const dur = parseInt(hint.dataset.duracion, 10);
+                const duraciones = {
+                    presencial: parseInt(hint.dataset.duracionPresencial, 10),
+                    online:     parseInt(hint.dataset.duracionOnline, 10),
+                };
                 const descansos = {
                     presencial: parseInt(hint.dataset.descansoPresencial, 10),
                     online:     parseInt(hint.dataset.descansoOnline, 10),
                 };
                 const actualizar = () => {
+                    const dur = duraciones[select.value] ?? duraciones.presencial;
                     const d = descansos[select.value] ?? 0;
                     hint.textContent = d > 0
                         ? `Duración: ${dur} min. + ${d} min. de descanso (huecos cada ${dur + d} min.)`

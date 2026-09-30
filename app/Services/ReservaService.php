@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class ReservaService
 {
+    private ?\Illuminate\Database\Eloquent\Collection $periodosCache = null;
+
     public function __construct(
         private CitaService $citaService,
         private PacienteService $pacienteService,
@@ -25,11 +27,12 @@ class ReservaService
 
     private function periodosVacacionesCargados(): \Illuminate\Database\Eloquent\Collection
     {
-        static $periodos = null;
-        if ($periodos === null) {
-            $periodos = PeriodoVacaciones::all();
+        // Cache de instancia (no static): evita repetir la consulta en un mismo
+        // cálculo de varios días, sin arrastrar datos obsoletos entre peticiones.
+        if ($this->periodosCache === null) {
+            $this->periodosCache = PeriodoVacaciones::all();
         }
-        return $periodos;
+        return $this->periodosCache;
     }
 
     private function enPeriodoVacaciones(Carbon $dia): bool

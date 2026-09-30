@@ -31,12 +31,15 @@ use App\Http\Controllers\Public\CitaController as PublicCitaController;
 use App\Http\Controllers\Public\FaqController as PublicFaqController;
 use App\Http\Controllers\Public\HomeController as PublicHomeController;
 use App\Http\Controllers\Public\PrivacidadController as PublicPrivacidadController;
+use App\Http\Controllers\Public\SeoController;
 use App\Http\Controllers\Public\ServiciosController as PublicServiciosController;
 use App\Http\Controllers\Public\SobreMiController as PublicSobreMiController;
 use App\Http\Controllers\Public\StoragePublicController;
 use App\Http\Controllers\Public\ThemeAssetsController;
-use App\Services\InstallerService;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('seo.robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('seo.sitemap');
 
 // Tema assets (imágenes, CSS, JS, etc)
 Route::get('/theme-assets/{slug}/{path}', [ThemeAssetsController::class, 'serve'])
@@ -201,9 +204,7 @@ Route::middleware('installed')->group(function () {
 
         // Temas visuales
         Route::get('temas', [TemaController::class, 'index'])->name('temas.index');
-        Route::post('temas/logo', [TemaController::class, 'actualizarLogo'])->name('temas.logo');
         Route::post('temas/{slug}/activar', [TemaController::class, 'activar'])->name('temas.activar');
-        Route::get('temas/{slug}/preview', [TemaController::class, 'preview'])->name('temas.preview');
 
         Route::prefix('blog')->name('blog.')->group(function () {
             Route::post('upload-imagen', [BlogUploadController::class, 'imagen'])->name('upload-imagen');
