@@ -11,7 +11,7 @@ Estado de todas las fases y tareas. Las tareas generales vienen de [CLAUDE.md](C
 | **[EXTRA]** | Funcionalidad que existe en el código pero no estaba en CLAUDE.md |
 | Fases | Mismas marcas: `[x]` finalizada, `[ ]` con tareas pendientes o sin empezar |
 
-_Última actualización: 2026-09-29 (Fase 19 completada: ver el detalle al final del documento)._
+_Última actualización: 2026-09-30 (FIX-001 de `fixes.md` aplicado; Fase 19 completada el 2026-09-29, ver el detalle al final del documento)._
 
 > **Nota de entorno (2026-09-29, posterior a la Fase 19):** el usuario cambió el servidor local de base de datos (ahora un servicio `MySQL80` en vez de la MariaDB de XAMPP; credenciales `root`/`root` en `.env`). La base de datos `cms_app` no existía en ese servidor: se creó y se ejecutó `php artisan migrate` (esquema al día, sin datos). Como la base de datos quedó vacía, se borró `storage/app/installed.lock` para que la app vuelva a pedir el asistente de instalación (`/instalacion`) en vez de mostrarse "instalada" con una base de datos sin usuaria ni datos públicos. Ningún código de la Fase 19 se ha modificado por esto.
 
@@ -83,6 +83,8 @@ _CLAUDE.md: asistente con BD automática, datos de acceso, datos públicos, foto
 - [x] **F1.6 Paso 5: tema visual** + modo landing/multipágina
 - [x] **F1.7 Paso 6: foto de perfil** con el aviso "sin fondo", optimizada
 - [x] **F1.8 Cierre:** funcionalidades activadas, `storage:link` robusto, `optimize:clear`, login automático y pantalla "completado"
+
+**[fixes.md] FIX-001 — Implementado, pendiente de validación.** El cursor del ratón no tenía una forma definida sobre los campos del asistente (`.field input`/`select`/`textarea` en `public/css/install/install.css` no fijaban `cursor`). Se añadió `cursor: text` a los campos de texto y `cursor: pointer` a los `select`; afecta a todos los pasos del asistente (comparten esa hoja de estilos). No se ha tocado ninguna otra funcionalidad del asistente.
 
 ---
 

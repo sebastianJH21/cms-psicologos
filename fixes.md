@@ -24,9 +24,17 @@ corregidos en el sistema.
 
 ## FIX-001 — Error de hover sobre los inputs
 
-**Estado:** Pendiente  
+**Estado:** Implementado, pendiente de validación  
 **Página:** `/instalacion/paso/2`  
 **Sección:** Instalación
+
+### Corrección aplicada
+
+`public/css/install/install.css`: `.field input`/`.field select`/`.field textarea` no
+tenían `cursor` definido. Se añadió `cursor: text` a `.field input`/`.field textarea`
+(texto, email, teléfono, contraseña) y `cursor: pointer` a `.field select`. Afecta a
+todos los pasos del asistente (comparten esta misma hoja de estilos), sin tocar
+`.theme-card`, `.radio` ni `.upload__zone`, que ya tenían su propio `cursor: pointer`.
 
 ### Problema
 
@@ -45,6 +53,35 @@ Al pasar el mouser sobre el input deberia cambiar a "defaul" para que se sepa qu
 
 - Que no desaparesca el puntero del mouse al pasar sobre un input.
 - Que cambie a la forma que mejor se relaciones según el tipo de input sobre el que esta pasando.
+
+---
+
+## FIX-002 — Valor de moneda y time zone
+
+**Estado:** Pendiente  
+**Página:** `/instalacion/paso/4`  
+**Sección:** Instalación
+
+### Problema
+
+El valor de moneda esta en Euros, y el horario por defecto esta en madrid españa.
+
+### Comportamiento actual
+
+- En la sección de instalación cuando se va a agregar un tipo de plan aparece la moneda de EUROS, y no me permite poner por ejemplo $120.000 en pesos colombianos, porque tambien tiene un limte de caracteres al parecer.
+
+- En el formato general las horas se estan guardando en el horario de madrid, porque en el .env esta ese formato de time zone.
+
+
+### Comportamiento esperado
+
+- Que la moneda sea por defecto en COP, y me permita ingresar solores de 6 o 7 cifras.
+- El formato de horario debe ser por defecto el de bogota.
+
+### Condiciones / reglas
+
+- Que pueda agregar los valores que necesita el usuario para poner el precio de los servicios en COP
+- Que todos los horarios se guarden con el timezone de bogota.
 
 ---
 
