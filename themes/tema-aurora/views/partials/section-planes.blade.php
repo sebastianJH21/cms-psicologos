@@ -16,7 +16,7 @@
                     <span class="t-aurora__plan-tipo">{{ ucfirst($plan->tipo) }}</span>
                     <h3>{{ $plan->nombre }}</h3>
                     <div class="t-aurora__plan-precio">
-                        <strong>{{ number_format($plan->precio, 0, ',', '.') }}€</strong>
+                        <strong>${{ number_format($plan->precio, 0, ',', '.') }}</strong>
                         <span>/ {{ $plan->duracion_min }} min</span>
                     </div>
                     @if ($plan->descripcion)

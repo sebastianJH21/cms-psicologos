@@ -15,7 +15,7 @@
                     @if ($loop->index === 1)<span class="t-mod__plan-badge">Más solicitado</span>@endif
                     <span class="t-mod__plan-tipo">{{ ucfirst($plan->tipo) }}</span>
                     <h3>{{ $plan->nombre }}</h3>
-                    <div class="t-mod__plan-price"><strong>{{ number_format($plan->precio, 0) }}€</strong><span>/ {{ $plan->duracion_min }} min</span></div>
+                    <div class="t-mod__plan-price"><strong>${{ number_format($plan->precio, 0) }}</strong><span>/ {{ $plan->duracion_min }} min</span></div>
                     @if ($plan->descripcion)<p>{{ \Illuminate\Support\Str::limit(strip_tags($plan->descripcion), 120) }}</p>@endif
                 </div>
             @endforeach

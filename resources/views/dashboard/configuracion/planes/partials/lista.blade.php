@@ -15,7 +15,7 @@
                     <td><strong>{{ $plan->nombre }}</strong></td>
                     <td>{{ Str::limit($plan->descripcion ?? '—', 80) }}</td>
                     <td>{{ $plan->duracion_min }} min</td>
-                    <td><strong>{{ number_format($plan->precio, 2, ',', '.') }} €</strong></td>
+                    <td><strong>${{ number_format($plan->precio, 0, ',', '.') }}</strong></td>
                     <td class="data-table__actions">
                         <a href="{{ route('dashboard.configuracion.planes.edit', $plan) }}"
                             class="btn btn--icon" aria-label="Editar">

@@ -49,6 +49,7 @@ _Última actualización: 2026-09-30 (FIX-001 de `fixes.md` aplicado; Fase 19 com
 | F1.9 | El asistente no recoge horarios ni disponibilidad | Añadir un paso o quitar el requisito de CLAUDE.md |
 | — | `database/seeders/DatabaseSeeder.php` sigue siendo la plantilla de Laravel: crea un `User` con los campos `name`/`email` (no existen en nuestra tabla `users`, que usa `nombre`/`apellidos`/`telefono`) y no llama a `CategoriasBlogSeeder` ni a `DemoDataSeeder`. `php artisan db:seed` (sin `--class`) fallaría. Encontrado al arreglar `UserFactory` para los tests de F19.3; no se ha tocado por estar fuera del alcance de la Fase 19 | Reescribir `DatabaseSeeder::run()` en una fase futura para que use los campos reales y encadene `CategoriasBlogSeeder` (y opcionalmente `DemoDataSeeder` solo en local) |
 | — | `composer.json` conserva `"name": "laravel/laravel"` y la descripción/keywords por defecto | Actualizar a los datos reales del proyecto cuando se toque de nuevo `composer.json` |
+| — | `EnsureInstalled`/`InstallerService::isInstalled()` comprueban el fichero físico real `storage/app/installed.lock`, compartido entre `php artisan test` y el entorno de desarrollo. Si la BD local está vacía (sin instalar), toda la suite falla salvo que se cree el fichero a mano antes de testear (y se borre después) | Hacer que el "instalado" de los tests dependa solo del entorno de testing (por ejemplo, mockear `InstallerService` o usar una ruta de lock configurable por `.env`/`config`), sin tocar el fichero real |
 
 ---
 
@@ -85,6 +86,12 @@ _CLAUDE.md: asistente con BD automática, datos de acceso, datos públicos, foto
 - [x] **F1.8 Cierre:** funcionalidades activadas, `storage:link` robusto, `optimize:clear`, login automático y pantalla "completado"
 
 **[fixes.md] FIX-001 — Implementado, pendiente de validación.** El cursor del ratón no tenía una forma definida sobre los campos del asistente (`.field input`/`select`/`textarea` en `public/css/install/install.css` no fijaban `cursor`). Se añadió `cursor: text` a los campos de texto y `cursor: pointer` a los `select`; afecta a todos los pasos del asistente (comparten esa hoja de estilos). No se ha tocado ninguna otra funcionalidad del asistente.
+
+**[fixes.md] FIX-002 — Implementado, pendiente de validación.** Moneda y zona horaria del proyecto cambian de España a Colombia:
+- **Moneda:** `planes_precios.precio` pasa de `decimal(8,2)` a `decimal(10,2)` (nueva migración) para admitir hasta 7 cifras; `max:99999.99` → `max:9999999.99` en `ServiciosRequest` (paso 4) y `PlanRequest` (panel); etiquetas y símbolo cambiados de "Precio (€)"/sufijo "€" a "Precio (COP)"/prefijo "$" en el paso 4, el formulario y el listado de planes del panel, y en los 11 `section-planes.blade.php` de los temas.
+- **Zona horaria:** `APP_TIMEZONE` pasa de `Europe/Madrid` a `America/Bogota` en `.env`, `.env.example` y `.env.prod-test`. `ReservaService::googleCalendarLink()` tenía `'Europe/Madrid'` fijo en el código (afectaba al enlace de "Añadir a Google Calendar" de toda reserva); ahora usa `config('app.timezone')`.
+- Tests nuevos: `PlanesCopTest` y `ReservaServiceTimezoneTest`. 39 tests en verde.
+- **Nota técnica (no de esta corrección):** para poder correr la suite tras el cambio de servidor de BD (ver nota de entorno de arriba), hubo que recrear temporalmente `storage/app/installed.lock` y borrarlo de nuevo al terminar — `EnsureInstalled`/`InstallerService::isInstalled()` comprueban ese fichero físico real, compartido entre los tests y el entorno de desarrollo (limitación ya documentada en el Fase 19 del plan). Mientras la base de datos local esté vacía, cualquier ejecución de `php artisan test` necesita ese mismo paso manual.
 
 ---
 

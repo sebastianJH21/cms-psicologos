@@ -27,10 +27,10 @@
 
     <div class="form-field">
         <label for="precio">
-            <i class="fa-solid fa-euro-sign" aria-hidden="true"></i>
-            Precio (€) *
+            <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
+            Precio (COP) *
         </label>
-        <input type="number" step="0.01" min="0" id="precio" name="precio" required
+        <input type="number" step="1" min="0" max="9999999" id="precio" name="precio" required
             value="{{ old('precio', $plan?->precio) }}">
         @error('precio')<small class="form-field__error">{{ $message }}</small>@enderror
     </div>

@@ -214,15 +214,16 @@ class ReservaService
 
     public function googleCalendarLink(Cita $cita, string $psicologa, ?string $direccion = null): string
     {
-        // Aseguramos que las fechas estén en la zona horaria de Madrid
+        // Aseguramos que las fechas estén en la zona horaria configurada de la aplicación
+        $zonaHoraria = config('app.timezone');
         $inicio = $cita->fecha_inicio
             ->copy()
-            ->setTimezone('Europe/Madrid')
+            ->setTimezone($zonaHoraria)
             ->format('Ymd\THis');
 
         $fin = $cita->fecha_fin
             ->copy()
-            ->setTimezone('Europe/Madrid')
+            ->setTimezone($zonaHoraria)
             ->format('Ymd\THis');
 
         $titulo = 'Cita con ' . $psicologa;
@@ -236,7 +237,7 @@ class ReservaService
             'action'   => 'TEMPLATE',
             'text'     => $titulo,
             'dates'    => "{$inicio}/{$fin}",
-            'ctz'      => 'Europe/Madrid',
+            'ctz'      => $zonaHoraria,
             'details'  => $detalles,
             'location' => $ubicacion,
         ]);

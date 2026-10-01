@@ -26,7 +26,7 @@ class ServiciosRequest extends FormRequest
             'planes.*.tipo' => ['required_with:planes.*.nombre', 'in:online,presencial'],
             'planes.*.nombre' => ['required_with:planes.*.precio', 'nullable', 'string', 'max:120'],
             'planes.*.descripcion' => ['nullable', 'string', 'max:600'],
-            'planes.*.precio' => ['required_with:planes.*.nombre', 'nullable', 'numeric', 'min:0', 'max:99999.99'],
+            'planes.*.precio' => ['required_with:planes.*.nombre', 'nullable', 'numeric', 'min:0', 'max:9999999.99'],
             'planes.*.duracion_min' => ['nullable', 'integer', 'min:5', 'max:600'],
         ];
     }

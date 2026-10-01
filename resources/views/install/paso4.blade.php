@@ -72,8 +72,8 @@
                                 <input type="text" data-name="nombre" maxlength="120">
                             </div>
                             <div class="field">
-                                <label>Precio (€)</label>
-                                <input type="number" data-name="precio" step="0.01" min="0">
+                                <label>Precio (COP)</label>
+                                <input type="number" data-name="precio" step="1" min="0" max="9999999">
                             </div>
                             <div class="field">
                                 <label>Duración (min)</label>

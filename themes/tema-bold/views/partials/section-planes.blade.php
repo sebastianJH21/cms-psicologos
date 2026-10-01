@@ -14,7 +14,7 @@
                     <span class="t-bold__plan-tipo">{{ ucfirst($plan->tipo) }}</span>
                     <h3>{{ $plan->nombre }}</h3>
                     <div class="t-bold__plan-price">
-                        <span class="t-bold__plan-amount">{{ number_format($plan->precio, 0) }}€</span>
+                        <span class="t-bold__plan-amount">${{ number_format($plan->precio, 0) }}</span>
                         <span class="t-bold__plan-duration">/ {{ $plan->duracion_min }} min</span>
                     </div>
                     @if ($plan->descripcion)

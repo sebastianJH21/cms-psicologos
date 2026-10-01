@@ -17,7 +17,7 @@
                             <i class="fa-solid {{ $plan->tipo === 'online' ? 'fa-globe' : 'fa-user' }} container-ico__ico"></i>
                         </div>
 
-                        <h2 class="price__online">{{ number_format($plan->precio, 0, ',', '.') }}€</h2>
+                        <h2 class="price__online">${{ number_format($plan->precio, 0, ',', '.') }}</h2>
                         <p class="price__text">{{ $plan->nombre }} · {{ ucfirst($plan->tipo) }}</p>
 
                         @if ($plan->descripcion)

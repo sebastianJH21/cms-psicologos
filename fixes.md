@@ -58,9 +58,46 @@ Al pasar el mouser sobre el input deberia cambiar a "defaul" para que se sepa qu
 
 ## FIX-002 — Valor de moneda y time zone
 
-**Estado:** Pendiente  
+**Estado:** Implementado, pendiente de validación  
 **Página:** `/instalacion/paso/4`  
 **Sección:** Instalación
+
+### Corrección aplicada
+
+El precio y el horario se usan en varias pantallas además del paso 4 (panel y
+web pública), así que la corrección se aplicó en todos los sitios donde
+aparecían, para no dejar la moneda o el horario inconsistentes entre pantallas:
+
+- **Moneda (COP) y hasta 7 cifras:**
+  - `database/migrations/2026_10_01_034704_widen_precio_column_in_planes_precios_table.php`
+    (nueva): `planes_precios.precio` pasa de `decimal(8,2)` (máx. 999999.99,
+    6 cifras) a `decimal(10,2)` (hasta 8 cifras). Solo aplica el `ALTER` en
+    MySQL; SQLite (tests) no necesita precisión real.
+  - `ServiciosRequest` (paso 4) y `PlanRequest` (panel): `max:99999.99` →
+    `max:9999999.99`.
+  - `install/paso4.blade.php`, `dashboard/configuracion/planes/partials/form.blade.php`:
+    etiqueta "Precio (€)" → "Precio (COP)", `step="0.01"` → `step="1"`,
+    icono `fa-euro-sign` → `fa-dollar-sign`.
+  - `dashboard/configuracion/planes/partials/lista.blade.php` y los 11
+    `themes/*/views/partials/section-planes.blade.php`: el símbolo pasa de
+    sufijo "123.456€" a prefijo "$123.456" (sin decimales, como se muestra
+    el precio en pesos colombianos).
+- **Zona horaria (Bogotá):**
+  - `.env`, `.env.example`, `.env.prod-test`: `APP_TIMEZONE=Europe/Madrid` →
+    `America/Bogota`.
+  - `ReservaService::googleCalendarLink()` tenía `'Europe/Madrid'` escrito a
+    mano (tres veces); ahora usa `config('app.timezone')`, así que sigue la
+    zona horaria configurada sin volver a quedar desactualizado si cambia.
+- Tests nuevos: `tests/Feature/Configuracion/PlanesCopTest.php` (admite un
+  precio de 7 cifras, rechaza uno negativo) y
+  `tests/Unit/Services/ReservaServiceTimezoneTest.php` (el enlace de Google
+  Calendar usa la zona horaria configurada). 39 tests en verde.
+
+**No se ha tocado** (fuera del alcance de esta corrección): el nombre de
+ciudades en `database/seeders/DemoDataSeeder.php` (datos de prueba) ni el
+placeholder "28001 Madrid" del campo de dirección en el perfil público —
+ninguno de los dos afecta a la moneda ni al horario, son solo texto de
+ejemplo.
 
 ### Problema
 
