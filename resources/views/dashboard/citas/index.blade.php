@@ -71,6 +71,13 @@
                 <label for="filtro-hasta">Hasta</label>
                 <input type="date" id="filtro-hasta" name="hasta" value="{{ $filtros['hasta'] }}">
             </div>
+            <div class="form-field form-field--switch-inline">
+                <label class="switch" aria-label="Solo pendientes de pago">
+                    <input type="checkbox" id="filtro-pendiente-pago" name="pendiente_pago" value="1" @checked($filtros['pendiente_pago'])>
+                    <span class="switch__slider"></span>
+                </label>
+                <span>Solo pendientes de pago</span>
+            </div>
             <div class="citas-filtros__actions">
                 <button type="submit" class="btn btn--primary">
                     <i class="fa-solid fa-filter" aria-hidden="true"></i>

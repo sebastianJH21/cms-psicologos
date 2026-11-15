@@ -60,6 +60,11 @@
             'desc' => 'Configura un correo de Gmail (con contraseña de aplicación) en "Configuración → Email y notificaciones" y empezarás a recibir un email cada vez que un paciente reserve cita en tu web.',
         ],
         [
+            'icon' => 'fa-message',
+            'title' => 'Mensaje de WhatsApp',
+            'desc' => 'En "Configuración → Mensaje de WhatsApp" escribes tu propio mensaje de confirmación, con variables como <code>{{nombre}}</code> o <code>{{fecha}}</code> y los emojis que quieras. Se usa en el botón "Confirmar por WhatsApp" de las citas y del calendario.',
+        ],
+        [
             'icon' => 'fa-share-nodes',
             'title' => 'Redes sociales',
             'desc' => 'Pega los enlaces a tus perfiles sociales (Instagram, Facebook, LinkedIn, TikTok, YouTube, Twitter/X y WhatsApp). Los iconos aparecerán automáticamente en el footer de tu web pública.',

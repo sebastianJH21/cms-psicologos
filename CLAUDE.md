@@ -334,15 +334,13 @@ El dashboard permitirá:
     - Máximo una cita por paciente y día.
     - El email de nueva cita se envía al propio correo con el alias `+notificaciones`.
 
-    ### FASE 18:
-    - En la parte publica:
-        - Seccion de blog con los articulos paginados y su correspondiente filtrado por categorias (si la psicologa tiene activada esta seccion de blog, se podrá activar o desactivar desde el dashboard, al igual que tendrá un crud de articulos)
-
-        - Botones de redes sociales en el footer (configurables las diferentes redes en el panel de administración)
-
-        - Añadido tras la auditoría del código (ya implementado):
-            - Paginación y filtro por categoría del blog por AJAX.
-            - Artículos relacionados en el detalle y feed RSS (`/blog/rss.xml`).
+### FASE 18:
+- En la parte publica:
+    - Seccion de blog con los articulos paginados y su correspondiente filtrado por categorias (si la psicologa tiene activada esta seccion de blog, se podrá activar o desactivar desde el dashboard, al igual que tendrá un crud de articulos)
+    - Botones de redes sociales en el footer (configurables las diferentes redes en el panel de administración)
+    - Añadido tras la auditoría del código (ya implementado):
+        - Paginación y filtro por categoría del blog por AJAX.
+        - Artículos relacionados en el detalle y feed RSS (`/blog/rss.xml`).
 
 ### FASE 19:
 - Calidad, limpieza y puesta en producción (fase añadida tras la auditoría del código):

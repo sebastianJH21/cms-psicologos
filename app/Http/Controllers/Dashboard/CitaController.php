@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\MarcarPagoRequest;
 use App\Http\Requests\Dashboard\StoreCitaRequest;
 use App\Http\Requests\Dashboard\UpdateCitaRequest;
 use App\Models\Cita;
@@ -64,6 +65,10 @@ class CitaController extends Controller
             });
         }
 
+        if ($request->boolean('pendiente_pago')) {
+            $query->pendientesDePago();
+        }
+
         $citas = $query->paginate(15)->withQueryString();
 
         if ($request->ajax()) {
@@ -81,6 +86,7 @@ class CitaController extends Controller
                 'hasta' => $request->input('hasta', ''),
                 'q' => $request->input('q', ''),
                 'periodo' => $periodo,
+                'pendiente_pago' => $request->boolean('pendiente_pago'),
             ],
             'modalidades' => Cita::MODALIDADES,
             'estados' => Cita::ESTADOS,
@@ -186,6 +192,40 @@ class CitaController extends Controller
             'estado_label' => $cita->estado_label,
             'badge' => $clase,
         ]);
+    }
+
+    public function marcarPago(MarcarPagoRequest $request, Cita $cita)
+    {
+        $datos = $request->validated();
+        $monto = $datos['monto'] ?? $cita->monto;
+
+        $error = match (true) {
+            $datos['pagado'] && !$cita->puede_marcarse_pagada => 'La cita debe estar confirmada o realizada para poder marcarla como pagada.',
+            $datos['pagado'] && $monto === null => 'Indica el importe antes de marcarla como pagada.',
+            default => null,
+        };
+
+        if ($error) {
+            if ($request->wantsJson()) {
+                return response()->json(['ok' => false, 'message' => $error], 422);
+            }
+
+            return back()->withErrors(['monto' => $error])->withInput();
+        }
+
+        $cita->update([
+            'pagado' => $datos['pagado'],
+            'monto' => $monto,
+            'pagado_at' => $datos['pagado'] ? now() : null,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['ok' => true, 'pagado' => $cita->pagado, 'monto' => $cita->monto]);
+        }
+
+        return redirect()
+            ->route('dashboard.citas.show', $cita)
+            ->with('success', 'Estado de pago actualizado correctamente.');
     }
 
     public function destroy(Cita $cita)

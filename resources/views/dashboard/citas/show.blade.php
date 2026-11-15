@@ -114,13 +114,26 @@
                         @endif
                     </dd>
                 </div>
-                @php $waCita = whatsapp_confirmacion_url($cita); @endphp
+                @php
+                    $waCita = whatsapp_confirmacion_url($cita);
+                    $waPago = whatsapp_recordatorio_pago_url($cita);
+                @endphp
                 @if ($waCita)
                     <div>
                         <dt><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp</dt>
                         <dd>
                             <a href="{{ $waCita }}" target="_blank" rel="noopener" class="cita-show__link cita-show__link--wa">
                                 Confirmar cita por WhatsApp
+                            </a>
+                        </dd>
+                    </div>
+                @endif
+                @if ($waPago && !$cita->pagado)
+                    <div>
+                        <dt><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Recordatorio</dt>
+                        <dd>
+                            <a href="{{ $waPago }}" target="_blank" rel="noopener" class="cita-show__link cita-show__link--wa">
+                                Recordar pago por WhatsApp
                             </a>
                         </dd>
                     </div>
@@ -152,6 +165,44 @@
             <p class="cita-show__text">
                 {{ $cita->motivo ?: 'Sin motivo indicado.' }}
             </p>
+        </section>
+
+        <section class="panel">
+            <header class="panel__header">
+                <h2 class="panel__title"><i class="fa-solid fa-sack-dollar" aria-hidden="true"></i> Pago</h2>
+                @if ($cita->pagado)
+                    <span class="cita-badge cita-badge--pago-ok"><i class="fa-solid fa-check" aria-hidden="true"></i> Pagada</span>
+                @elseif ($cita->puede_marcarse_pagada)
+                    <span class="cita-badge cita-badge--pago-pendiente"><i class="fa-solid fa-clock" aria-hidden="true"></i> Pendiente</span>
+                @endif
+            </header>
+
+            @if (!$cita->puede_marcarse_pagada)
+                <p class="cita-show__hint">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    La cita debe estar confirmada o realizada para poder registrar su pago.
+                </p>
+            @else
+                <form method="POST" action="{{ route('dashboard.citas.pago', $cita) }}" class="cita-pago-form">
+                    @csrf
+                    @method('PATCH')
+                    <div class="form-field">
+                        <label for="pago-monto">Importe (COP)</label>
+                        <input type="number" id="pago-monto" name="monto" step="1" min="1" max="9999999"
+                            value="{{ old('monto', $cita->monto) }}" placeholder="Ej. 120000">
+                        @error('monto') <span class="form-error">{{ $message }}</span> @enderror
+                    </div>
+                    <label class="switch" aria-label="Marcar como pagada">
+                        <input type="checkbox" name="pagado" value="1" @checked($cita->pagado)>
+                        <span class="switch__slider"></span>
+                    </label>
+                    <span>Marcar como pagada</span>
+                    <button type="submit" class="btn btn--primary">
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                        Guardar
+                    </button>
+                </form>
+            @endif
         </section>
 
         @if ($cita->notas_internas)

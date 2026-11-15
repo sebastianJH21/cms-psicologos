@@ -62,7 +62,7 @@
         });
     }
 
-    ['filtro-modalidad', 'filtro-estado', 'filtro-desde', 'filtro-hasta'].forEach((id) => {
+    ['filtro-modalidad', 'filtro-estado', 'filtro-desde', 'filtro-hasta', 'filtro-pendiente-pago'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', filtrar);
     });
@@ -86,11 +86,13 @@
             const estadoEl = document.getElementById('filtro-estado');
             const desdeEl = document.getElementById('filtro-desde');
             const hastaEl = document.getElementById('filtro-hasta');
+            const pendientePagoEl = document.getElementById('filtro-pendiente-pago');
             if (qEl) qEl.value = '';
             if (modalidadEl) modalidadEl.value = '';
             if (estadoEl) estadoEl.value = '';
             if (desdeEl) desdeEl.value = '';
             if (hastaEl) hastaEl.value = '';
+            if (pendientePagoEl) pendientePagoEl.checked = false;
             filtrar();
         });
     }

@@ -21,6 +21,9 @@ class Cita extends Model
         'fecha_fin',
         'motivo',
         'estado',
+        'pagado',
+        'monto',
+        'pagado_at',
         'notas_internas',
         'origen',
     ];
@@ -28,7 +31,12 @@ class Cita extends Model
     protected $casts = [
         'fecha_inicio' => 'datetime',
         'fecha_fin' => 'datetime',
+        'pagado' => 'boolean',
+        'monto' => 'decimal:2',
+        'pagado_at' => 'datetime',
     ];
+
+    public const ESTADOS_PAGABLES = ['confirmada', 'realizada'];
 
     public const ESTADOS = [
         'pendiente' => 'Pendiente',
@@ -61,6 +69,16 @@ class Cita extends Model
     public function scopeNoCanceladas($query)
     {
         return $query->where('estado', '!=', 'cancelada');
+    }
+
+    public function scopePendientesDePago($query)
+    {
+        return $query->whereIn('estado', self::ESTADOS_PAGABLES)->where('pagado', false);
+    }
+
+    public function getPuedeMarcarsePagadaAttribute(): bool
+    {
+        return in_array($this->estado, self::ESTADOS_PAGABLES, true);
     }
 
     public function paciente(): BelongsTo

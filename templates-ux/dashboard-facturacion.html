@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturación · Panel Psicóloga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   TOKENS DE DISEÑO — cambia aquí para adaptar a tu marca
+   ========================================================= */
+:root{
+  --bg:#f5f6f8;
+  --surface:#ffffff;
+  --surface-2:#fafbfc;
+  --border:#e6e8ec;
+  --border-strong:#d5d9e0;
+  --text:#1c2230;
+  --text-2:#4a5263;
+  --muted:#8a91a0;
+  --accent:#3d7a6c;          /* verde salvia: calma, confianza */
+  --accent-600:#326758;
+  --accent-soft:#e9f3f0;
+  --success:#2f8a5b;
+  --success-soft:#e7f5ee;
+  --warn:#b07416;
+  --warn-soft:#fcf4e5;
+  --danger:#c0524a;
+  --danger-soft:#fbeceb;
+  --info:#4a6fa5;
+  --info-soft:#ebf1f9;
+  --wa:#1f9d55;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 2px rgba(20,28,45,.04),0 1px 3px rgba(20,28,45,.04);
+  --shadow-lg:0 12px 32px rgba(20,28,45,.14);
+  --font:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:inherit;text-decoration:none}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- Layout ---------- */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px}
+.brand-mark{width:32px;height:32px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:#fff;font-weight:700}
+.brand b{display:block;font-size:14px}
+.brand small{color:var(--muted);font-size:12px}
+.nav-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:0 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);color:var(--text-2);font-weight:500;margin-bottom:2px}
+.nav a:hover{background:var(--bg);color:var(--text)}
+.nav a.active{background:var(--accent-soft);color:var(--accent-600)}
+.nav a svg{width:18px;height:18px;flex:none}
+.nav .sub{margin:2px 0 6px 28px;border-left:1px solid var(--border);padding-left:8px}
+.nav .sub a{font-size:13px;padding:6px 10px;font-weight:500}
+.nav .sub a.active{background:transparent;color:var(--accent-600);font-weight:600}
+.tag-soon{margin-left:auto;font-size:10px;font-weight:600;padding:2px 6px;border-radius:20px;background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.sidebar-foot{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--border)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent-600);display:grid;place-items:center;font-weight:600;font-size:12px;flex:none}
+.sidebar-foot b{font-size:13px;display:block}.sidebar-foot small{font-size:12px;color:var(--muted)}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 32px 0;flex-wrap:wrap}
+.crumbs{font-size:12px;color:var(--muted);margin-bottom:4px}
+.crumbs span{color:var(--text-2)}
+h1{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.content{padding:20px 32px 48px;display:flex;flex-direction:column;gap:20px}
+.view{display:none}
+.view.active{display:contents}
+
+/* ---------- Componentes ---------- */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 0;flex-wrap:wrap}
+.card-h h3{font-size:15px;font-weight:600}
+.card-h p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.card-b{padding:16px 20px 20px}
+
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:var(--radius-sm);font-weight:500;font-size:13.5px;border:1px solid var(--border-strong);background:var(--surface);white-space:nowrap;transition:.15s}
+.btn:hover{background:var(--bg)}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-600)}
+.btn-ghost{border-color:transparent;background:transparent}
+.btn-sm{height:30px;padding:0 10px;font-size:12.5px}
+.btn-wa{color:var(--wa);border-color:#bfe5cf;background:#f2fbf6}
+.btn-wa:hover{background:#e3f6eb}
+.btn:disabled{opacity:.4;cursor:not-allowed;background:var(--surface)}
+.icon-btn{width:30px;height:30px;border-radius:var(--radius-sm);display:grid;place-items:center;color:var(--muted)}
+.icon-btn:hover{background:var(--bg);color:var(--text)}
+.icon-btn svg{width:16px;height:16px}
+
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px;gap:2px}
+.seg button{height:28px;padding:0 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--text-2)}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+.select{height:36px;padding:0 32px 0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238a91a0' stroke-width='2'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;font-weight:500}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding:0 32px;margin-top:16px;overflow-x:auto}
+.tabs button{padding:10px 12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tabs button:hover{color:var(--text)}
+.tabs button.on{color:var(--text);border-color:var(--accent)}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{padding:18px 20px}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kpi-label{font-size:12.5px;color:var(--muted);font-weight:500}
+.kpi-ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+.kpi-ico svg{width:16px;height:16px}
+.kpi-value{font-size:24px;font-weight:600;letter-spacing:-.02em}
+.kpi-foot{font-size:12px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:6px}
+.delta{display:inline-flex;align-items:center;gap:2px;font-weight:600;padding:1px 6px;border-radius:20px;font-size:11.5px}
+.delta.up{color:var(--success);background:var(--success-soft)}
+.delta.down{color:var(--danger);background:var(--danger-soft)}
+
+.grid-charts{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+
+/* Chart */
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;overflow:visible}
+.chart .tip{position:absolute;pointer-events:none;background:var(--text);color:#fff;padding:8px 10px;border-radius:8px;font-size:12px;white-space:nowrap;transform:translate(-50%,-100%);margin-top:-12px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow-lg)}
+.chart .tip b{display:block;font-size:13px;font-weight:600}
+.chart .tip small{opacity:.7}
+.chart-stats{display:flex;gap:24px;margin-bottom:8px;flex-wrap:wrap}
+.chart-stats div small{display:block;font-size:12px;color:var(--muted)}
+.chart-stats div b{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.legend i.dash{width:14px;height:0;border-top:2px dashed var(--warn);border-radius:0;vertical-align:3px}
+
+/* Tablas */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;flex-wrap:wrap}
+.toolbar-l,.toolbar-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search{position:relative}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted)}
+.search input{height:36px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:0 12px 0 32px;width:220px;background:var(--surface)}
+.search input:focus,.field input:focus,.field select:focus,.field textarea:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{height:30px;padding:0 12px;border-radius:20px;border:1px solid var(--border);font-size:12.5px;font-weight:500;color:var(--text-2);display:inline-flex;align-items:center;gap:6px;background:var(--surface)}
+.chip:hover{border-color:var(--border-strong)}
+.chip .c{font-size:11px;background:var(--bg);border-radius:20px;padding:0 6px;color:var(--muted)}
+.chip.on{background:var(--text);border-color:var(--text);color:#fff}
+.chip.on .c{background:rgba(255,255,255,.18);color:#fff}
+.chip.warn.on{background:var(--warn);border-color:var(--warn)}
+
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:10px 20px;background:var(--surface-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+th.r,td.r{text-align:right}
+.cell-main{font-weight:500}
+.cell-sub{font-size:12px;color:var(--muted)}
+.person{display:flex;align-items:center;gap:10px}
+.amount-in{color:var(--success);font-weight:600}
+.amount-out{color:var(--text);font-weight:600}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 9px;border-radius:20px}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-ok{background:var(--success-soft);color:var(--success)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-off{background:var(--bg);color:var(--muted)}
+.b-info{background:var(--info-soft);color:var(--info)}
+.b-danger{background:var(--danger-soft);color:var(--danger)}
+.b-plain::before{display:none}
+
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;border-top:1px solid var(--border);flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.pager-btns{display:flex;gap:4px;align-items:center}
+.pager-btns button{min-width:30px;height:30px;padding:0 8px;border-radius:7px;font-weight:500;color:var(--text-2);border:1px solid transparent}
+.pager-btns button:hover:not(:disabled){background:var(--bg)}
+.pager-btns button.on{border-color:var(--border-strong);background:var(--surface);color:var(--text)}
+.pager-btns button:disabled{opacity:.35;cursor:default}
+.pager-btns svg{width:14px;height:14px;vertical-align:-2px}
+
+/* Switch */
+.pay{display:flex;align-items:center;gap:10px}
+.switch{position:relative;width:36px;height:20px;flex:none}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch span{position:absolute;inset:0;background:var(--border-strong);border-radius:20px;transition:.18s;cursor:pointer}
+.switch span::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked+span{background:var(--success)}
+.switch input:checked+span::after{transform:translateX(16px)}
+.switch input:disabled+span{opacity:.45;cursor:not-allowed}
+.switch input:focus-visible+span{box-shadow:0 0 0 3px var(--accent-soft)}
+.pay-label{font-size:12.5px;font-weight:500}
+
+/* Resumen ingresos/gastos */
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini{padding:16px 20px}
+.mini small{color:var(--muted);font-size:12.5px;display:block}
+.mini b{font-size:20px;font-weight:600;letter-spacing:-.01em;display:block;margin-top:4px}
+.cat-row{margin-bottom:14px}
+.cat-row:last-child{margin-bottom:0}
+.cat-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.cat-top span:last-child{font-weight:600}
+.bar{height:6px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:6px}
+
+/* Empty / próximamente */
+.soon{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:32px;align-items:center}
+.soon h2{font-size:20px;font-weight:600;margin:12px 0 8px}
+.soon p{color:var(--text-2);max-width:460px}
+.soon ul{list-style:none;display:grid;gap:10px}
+.soon li{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px dashed var(--border-strong);border-radius:var(--radius-sm);background:var(--surface-2)}
+.soon li svg{width:18px;height:18px;color:var(--accent);flex:none;margin-top:1px}
+.soon li b{font-size:13.5px;display:block}
+.soon li small{color:var(--muted);font-size:12.5px}
+
+/* WhatsApp config */
+.cfg-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:20px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12.5px;font-weight:500;color:var(--text-2)}
+.field input,.field select,.field textarea,textarea{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;background:var(--surface);width:100%}
+.field input,.field select{height:38px}
+textarea{resize:vertical;min-height:210px;line-height:1.55}
+.vars{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.var{font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-600);border:1px solid transparent}
+.var:hover{border-color:var(--accent)}
+.hint{font-size:12px;color:var(--muted)}
+.phone{background:#efeae2;border-radius:14px;padding:16px;min-height:220px;border:1px solid var(--border)}
+.phone-h{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);margin-bottom:12px}
+.bubble{background:#d9fdd3;border-radius:10px 10px 2px 10px;padding:9px 11px 18px;font-size:13px;line-height:1.5;white-space:pre-wrap;position:relative;margin-left:24px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bubble time{position:absolute;right:8px;bottom:3px;font-size:10.5px;color:#667781}
+.cfg-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(20,26,38,.42);display:none;align-items:center;justify-content:center;padding:16px;z-index:50;backdrop-filter:blur(2px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:14px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);max-height:calc(100vh - 32px);overflow:auto}
+.modal-h{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 20px 4px}
+.modal-h h3{font-size:16px;font-weight:600}
+.modal-h p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.modal-b{padding:16px 20px}
+.modal-f{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--border)}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.money{position:relative}
+.money span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.money input{padding-left:24px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--text);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;z-index:60;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast svg{width:16px;height:16px;color:#8fd6b0}
+
+.note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--radius-sm);background:var(--info-soft);color:var(--info);font-size:12.5px}
+.note svg{width:16px;height:16px;flex:none;margin-top:1px}
+
+/* Responsive */
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-charts,.grid-2{grid-template-columns:1fr}.cfg-grid{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:10px 16px;gap:8px;align-items:center}
+  .brand small,.nav-label,.sidebar-foot,.nav .sub{display:none}
+  .nav{display:flex;gap:4px}
+  .nav a{white-space:nowrap}
+  .topbar,.content{padding-left:16px;padding-right:16px}
+  .tabs{padding:0 16px}
+  .soon{grid-template-columns:1fr;padding:20px}
+}
+@media (max-width:560px){.kpis,.mini-stats,.row-2{grid-template-columns:1fr}.search input{width:100%}.search{flex:1}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">P</div><div><b>Psicoconsulta</b><small>Panel profesional</small></div></div>
+    <nav class="nav">
+      <div class="nav-label">General</div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</a>
+      <a href="#" data-route="citas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Citas</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.5-2-4.2-4-5"/></svg>Pacientes</a>
+
+      <div class="nav-label" style="margin-top:14px">Módulos</div>
+      <a href="#" data-route="facturacion" data-tab="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V6"/></svg>Facturación</a>
+      <div class="sub" id="billingSub">
+        <a href="#" data-route="facturacion" data-tab="resumen">Resumen</a>
+        <a href="#" data-route="facturacion" data-tab="ingresos">Ingresos</a>
+        <a href="#" data-route="facturacion" data-tab="gastos">Gastos</a>
+        <a href="#" data-route="facturacion" data-tab="pagos">Pagos en línea <span class="tag-soon">Pronto</span></a>
+      </div>
+      <a href="#" data-route="whatsapp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Configuración</a>
+    </nav>
+    <div class="sidebar-foot"><div class="avatar">LR</div><div><b>Dra. Laura Restrepo</b><small>Psicóloga clínica</small></div></div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ================= MÓDULO FACTURACIÓN ================= -->
+    <section class="view" data-view="facturacion">
+      <div class="topbar">
+        <div>
+          <div class="crumbs">Módulos / <span id="billCrumb">Facturación</span></div>
+          <h1>Facturación</h1>
+        </div>
+        <div class="toolbar-r">
+          <select class="select" aria-label="Periodo"><option>Octubre 2026</option><option>Septiembre 2026</option><option>Agosto 2026</option></select>
+          <button class="btn" data-open="modalGasto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>Gasto</button>
+          <button class="btn btn-primary" data-open="modalIngreso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Ingreso manual</button>
+        </div>
+      </div>
+      <div class="tabs" id="billTabs">
+        <button data-tab="resumen">Resumen</button>
+        <button data-tab="ingresos">Ingresos</button>
+        <button data-tab="gastos">Gastos</button>
+        <button data-tab="pagos">Pagos en línea <span class="tag-soon">Pronto</span></button>
+      </div>
+
+      <div class="content">
+        <!-- ---- Tab: Resumen ---- -->
+        <div class="tab-pane" data-pane="resumen" style="display:flex;flex-direction:column;gap:20px">
+          <div class="kpis" id="kpis"></div>
+
+          <div class="grid-charts">
+            <div class="card">
+              <div class="card-h">
+                <div><h3>Ingresos del mes</h3><p>Solo citas pagadas · Octubre 2026</p></div>
+                <div class="seg" id="segMes"><button data-v="acum" class="on">Acumulado</button><button data-v="diario">Diario</button></div>
+              </div>
+              <div class="card-b">
+                <div class="chart-stats" id="statsMes"></div>
+                <div class="chart" id="chartMes"></div>
+                <div class="legend" style="margin-top:10px"><span><i style="background:var(--accent)"></i>Citas pagadas</span><span id="legRefMes"><i class="dash"></i>Mes anterior</span></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h">
+                <div><h3>Promedio de ingresos</h3><p>Ingresos mensuales por citas pagadas</p></div>
+                <div class="seg" id="segProm"><button data-v="6" class="on">6 meses</button><button data-v="12">12 meses</button></div>
+              </div>
+              <div class="card-b">
+                <div class="chart-stats" id="statsProm"></div>
+                <div class="chart" id="chartProm"></div>
+                <div class="legend" style="margin-top:10px"><span><i style="background:var(--info)"></i>Ingreso mensual</span><span><i class="dash"></i>Promedio</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div><h3 style="font-size:15px;font-weight:600">Últimos movimientos</h3><p class="hint">Ingresos por citas, ingresos manuales y gastos</p></div>
+              <div class="seg" id="segMov"><button data-v="todos" class="on">Todos</button><button data-v="ingreso">Ingresos</button><button data-v="gasto">Gastos</button></div>
+            </div>
+            <div id="tblMov"></div>
+          </div>
+        </div>
+
+        <!-- ---- Tab: Ingresos ---- -->
+        <div class="tab-pane" data-pane="ingresos" style="display:none;flex-direction:column;gap:20px">
+          <div class="mini-stats" id="miniIngresos"></div>
+          <div class="card">
+            <div class="toolbar">
+              <div class="toolbar-l">
+                <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="qIng" placeholder="Buscar concepto o paciente"></div>
+                <div class="chips" id="chipsIng"></div>
+              </div>
+              <button class="btn btn-primary" data-open="modalIngreso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Registrar ingreso</button>
+            </div>
+            <div id="tblIng"></div>
+          </div>
+        </div>
+
+        <!-- ---- Tab: Gastos ---- -->
+        <div class="tab-pane" data-pane="gastos" style="display:none;flex-direction:column;gap:20px">
+          <div class="mini-stats" id="miniGastos"></div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="toolbar">
+                <div class="toolbar-l">
+                  <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="qGas" placeholder="Buscar gasto"></div>
+                </div>
+                <button class="btn btn-primary" data-open="modalGasto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Registrar gasto</button>
+              </div>
+              <div id="tblGas"></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><div><h3>Gastos por categoría</h3><p>Distribución del mes</p></div></div>
+              <div class="card-b" id="catGastos"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Tab: Pagos en línea (escalabilidad) ---- -->
+        <div class="tab-pane" data-pane="pagos" style="display:none">
+          <div class="card soon">
+            <div>
+              <span class="badge b-info">Próximamente</span>
+              <h2>Pagos en línea para tus pacientes</h2>
+              <p>Este espacio del módulo de facturación está reservado para conectar una pasarela de pago. Cuando lo actives, las citas pagadas en línea se marcarán automáticamente y alimentarán tus reportes.</p>
+              <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" disabled>Conectar pasarela</button><button class="btn">Avisarme cuando esté listo</button></div>
+            </div>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><div><b>Links de pago por cita</b><small>Envía el enlace por WhatsApp junto al recordatorio.</small></div></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><div><b>Conciliación automática</b><small>El estado “Pagada” se actualiza solo.</small></div></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><div><b>Comprobantes y facturas</b><small>Recibos descargables para cada paciente.</small></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CITAS ================= -->
+    <section class="view" data-view="citas">
+      <div class="topbar">
+        <div><div class="crumbs">General / <span>Citas</span></div><h1>Citas</h1></div>
+        <div class="toolbar-r">
+          <select class="select" aria-label="Periodo"><option>Octubre 2026</option><option>Septiembre 2026</option></select>
+          <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nueva cita</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="mini-stats" id="miniCitas"></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="toolbar-l">
+              <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="qCit" placeholder="Buscar paciente"></div>
+              <div class="chips" id="chipsCit"></div>
+            </div>
+            <span class="hint">El pago se habilita cuando la cita está confirmada</span>
+          </div>
+          <div id="tblCit"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONFIGURACIÓN / WHATSAPP ================= -->
+    <section class="view" data-view="whatsapp">
+      <div class="topbar">
+        <div><div class="crumbs">Configuración / <span>WhatsApp</span></div><h1>Configuración</h1></div>
+      </div>
+      <div class="tabs">
+        <button>Perfil</button><button>Horarios</button><button class="on">WhatsApp</button><button>Notificaciones</button>
+      </div>
+      <div class="content" id="tplList"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ MODALES ============ -->
+<div class="modal-bg" id="modalIngreso">
+  <form class="modal" data-form="ingreso">
+    <div class="modal-h"><div><h3>Registrar ingreso manual</h3><p>Talleres, informes, supervisiones u otros ingresos.</p></div><button type="button" class="icon-btn" data-close>✕</button></div>
+    <div class="modal-b">
+      <div class="field"><label>Concepto</label><input name="concepto" required placeholder="Ej. Taller de manejo del estrés"></div>
+      <div class="row-2">
+        <div class="field"><label>Categoría</label><select name="categoria"><option>Taller / charla</option><option>Informe psicológico</option><option>Supervisión clínica</option><option>Evaluación</option><option>Otro</option></select></div>
+        <div class="field"><label>Fecha</label><input type="date" name="fecha" value="2026-10-24" required></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>Monto</label><div class="money"><span>$</span><input name="monto" inputmode="numeric" required placeholder="0"></div></div>
+        <div class="field"><label>Método</label><select name="metodo"><option>Transferencia</option><option>Efectivo</option><option>Nequi</option><option>Daviplata</option><option>Tarjeta</option></select></div>
+      </div>
+      <div class="field" style="margin-bottom:0"><label>Nota (opcional)</label><input name="nota" placeholder="Detalle adicional"></div>
+    </div>
+    <div class="modal-f"><button type="button" class="btn" data-close>Cancelar</button><button class="btn btn-primary">Guardar ingreso</button></div>
+  </form>
+</div>
+
+<div class="modal-bg" id="modalGasto">
+  <form class="modal" data-form="gasto">
+    <div class="modal-h"><div><h3>Registrar gasto</h3><p>Arriendo de consultorio, herramientas u otros gastos.</p></div><button type="button" class="icon-btn" data-close>✕</button></div>
+    <div class="modal-b">
+      <div class="field"><label>Concepto</label><input name="concepto" required placeholder="Ej. Arriendo consultorio El Poblado"></div>
+      <div class="row-2">
+        <div class="field"><label>Categoría</label><select name="categoria"><option>Arriendo consultorio</option><option>Software y herramientas</option><option>Servicios</option><option>Formación y supervisión</option><option>Publicidad</option><option>Otros</option></select></div>
+        <div class="field"><label>Fecha</label><input type="date" name="fecha" value="2026-10-24" required></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>Monto</label><div class="money"><span>$</span><input name="monto" inputmode="numeric" required placeholder="0"></div></div>
+        <div class="field"><label>Método</label><select name="metodo"><option>Transferencia</option><option>Efectivo</option><option>Tarjeta</option><option>Débito automático</option></select></div>
+      </div>
+      <div class="field" style="margin-bottom:0"><label>Nota (opcional)</label><input name="nota" placeholder="Detalle adicional"></div>
+    </div>
+    <div class="modal-f"><button type="button" class="btn" data-close>Cancelar</button><button class="btn btn-primary">Guardar gasto</button></div>
+  </form>
+</div>
+
+<div class="modal-bg" id="modalWa">
+  <div class="modal">
+    <div class="modal-h"><div><h3>Recordar pago por WhatsApp</h3><p id="waTo"></p></div><button type="button" class="icon-btn" data-close>✕</button></div>
+    <div class="modal-b">
+      <div class="field"><label>Mensaje (basado en tu plantilla “Recordatorio de pago”)</label><textarea id="waMsg" style="min-height:170px"></textarea></div>
+      <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span>Puedes editar este mensaje solo para este envío. La plantilla se cambia en Configuración › WhatsApp.</span></div>
+    </div>
+    <div class="modal-f"><button type="button" class="btn" data-close>Cancelar</button><button type="button" class="btn btn-primary" id="waSend" style="background:var(--wa);border-color:var(--wa)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>Abrir WhatsApp</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span></span></div>
+
+<script>
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const COP = new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0});
+const money = v => COP.format(v);
+const short = v => v>=1e6 ? '$'+(v/1e6).toFixed(1).replace('.',',')+'M' : v>=1e3 ? '$'+Math.round(v/1e3)+'k' : '$'+v;
+let seed = 11; const rnd = () => (seed = (seed*16807) % 2147483647, (seed-1)/2147483646);
+const pick = a => a[Math.floor(rnd()*a.length)];
+const fmtDate = d => d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
+const fmtLong = d => d.toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+const initials = n => n.split(' ').map(p=>p[0]).slice(0,2).join('');
+const ICON = {
+  up:'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 14l5-5 5 5"/></svg>',
+  down:'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 10l5 5 5-5"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>',
+  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h2M3 10h18"/></svg>',
+  out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+};
+function toast(msg){const t=$('#toast');$('span',t).textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+
+/* =========================================================
+   DATOS DE EJEMPLO (reemplazar por API)
+   ========================================================= */
+const YEAR=2026, MONTH=9 /* octubre */, TODAY=24, PSICOLOGA='Dra. Laura Restrepo';
+const PACIENTES = [
+  ['Valentina Gómez','3104567890'],['Santiago Restrepo','3157894561'],['Mariana Ochoa','3001234567'],
+  ['Juan Pablo Arango','3209876543'],['Camila Zapata','3112345678'],['Andrés Mejía','3186549870'],
+  ['Laura Cardona','3014567321'],['Sebastián Vélez','3125678901'],['Isabella Montoya','3043219876'],
+  ['Daniel Muñoz','3167890123'],['Sara Londoño','3198765432'],['Tomás Henao','3056781234'],
+];
+const HORAS=['08:00','09:00','10:00','11:00','14:00','15:00','16:00','17:00','18:00'];
+
+const state = { citas:[], ingresos:[], gastos:[], templates:{} };
+
+(function genCitas(){
+  let id=1;
+  for(let d=1; d<=31; d++){
+    const date = new Date(YEAR,MONTH,d), dow = date.getDay();
+    if(dow===0) continue;
+    const n = dow===6 ? 1+Math.floor(rnd()*2) : 2+Math.floor(rnd()*3);
+    const horas=[...HORAS].sort(()=>rnd()-.5).slice(0,n).sort();
+    horas.forEach(h=>{
+      const [nombre,tel]=pick(PACIENTES);
+      const modalidad = rnd()<.35?'Virtual':'Presencial';
+      const valor = modalidad==='Virtual'?140000:160000;
+      let estado, pagado=false;
+      if(d<TODAY){ estado = rnd()<.07?'Cancelada':'Confirmada'; pagado = estado==='Confirmada' && rnd()<.86; }
+      else { estado = rnd()<.6?'Confirmada':'Por confirmar'; pagado = estado==='Confirmada' && rnd()<.15; }
+      state.citas.push({id:id++, paciente:nombre, tel, fecha:date, hora:h, modalidad, valor, estado, pagado,
+        metodo:pick(['Transferencia','Nequi','Efectivo','Daviplata'])});
+    });
+  }
+  state.citas.sort((a,b)=>b.fecha-a.fecha || b.hora.localeCompare(a.hora));
+})();
+
+state.ingresos = [
+  {id:'i1',concepto:'Taller de manejo del estrés – Empresa Andina',categoria:'Taller / charla',fecha:new Date(YEAR,MONTH,9),monto:850000,metodo:'Transferencia'},
+  {id:'i2',concepto:'Informe psicológico – proceso laboral',categoria:'Informe psicológico',fecha:new Date(YEAR,MONTH,15),monto:320000,metodo:'Nequi'},
+  {id:'i3',concepto:'Supervisión clínica a colega',categoria:'Supervisión clínica',fecha:new Date(YEAR,MONTH,20),monto:250000,metodo:'Transferencia'},
+];
+state.gastos = [
+  {id:'g1',concepto:'Arriendo consultorio El Poblado',categoria:'Arriendo consultorio',fecha:new Date(YEAR,MONTH,1),monto:1200000,metodo:'Transferencia'},
+  {id:'g2',concepto:'Consultorio Laureles (por horas)',categoria:'Arriendo consultorio',fecha:new Date(YEAR,MONTH,3),monto:420000,metodo:'Transferencia'},
+  {id:'g3',concepto:'Plataforma de videollamadas',categoria:'Software y herramientas',fecha:new Date(YEAR,MONTH,5),monto:62000,metodo:'Tarjeta'},
+  {id:'g4',concepto:'Software de historia clínica',categoria:'Software y herramientas',fecha:new Date(YEAR,MONTH,5),monto:89000,metodo:'Tarjeta'},
+  {id:'g5',concepto:'Internet y telefonía',categoria:'Servicios',fecha:new Date(YEAR,MONTH,8),monto:118000,metodo:'Débito automático'},
+  {id:'g6',concepto:'Supervisión de casos',categoria:'Formación y supervisión',fecha:new Date(YEAR,MONTH,12),monto:300000,metodo:'Transferencia'},
+  {id:'g7',concepto:'Pauta en redes sociales',categoria:'Publicidad',fecha:new Date(YEAR,MONTH,14),monto:180000,metodo:'Tarjeta'},
+  {id:'g8',concepto:'Pruebas psicométricas (licencia)',categoria:'Software y herramientas',fecha:new Date(YEAR,MONTH,16),monto:145000,metodo:'Tarjeta'},
+  {id:'g9',concepto:'Papelería y material terapéutico',categoria:'Otros',fecha:new Date(YEAR,MONTH,18),monto:54000,metodo:'Efectivo'},
+  {id:'g10',concepto:'Seguro de responsabilidad profesional',categoria:'Otros',fecha:new Date(YEAR,MONTH,21),monto:95000,metodo:'Débito automático'},
+];
+// Histórico (nov 2025 → sep 2026): ingresos por citas pagadas
+const HIST_LABELS=['Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'];
+const HIST=[5480000,4620000,5150000,5900000,6240000,5980000,6610000,6320000,6050000,6890000,7140000];
+const PREV_GASTOS=2380000, PREV_MANUAL=900000;
+
+state.templates = {
+  confirmacion:{titulo:'Confirmación de cita',desc:'Se envía al confirmar una cita desde el panel de citas.',
+    texto:'Hola {paciente} 👋\nTe confirmo tu cita de psicología el {fecha} a las {hora} ({modalidad}).\n\nSi necesitas reprogramar, por favor avísame con 24 horas de anticipación.\n\n{psicologa}'},
+  pago:{titulo:'Recordatorio de pago',desc:'Se usa con el botón de WhatsApp en citas pendientes por pagar.',
+    texto:'Hola {paciente}, espero que estés muy bien.\nTe recuerdo que está pendiente el pago de la sesión del {fecha} a las {hora} por un valor de {valor}.\n\nPuedes hacerlo por transferencia o Nequi. Cuando lo realices, me compartes el comprobante 🙏\n\nGracias,\n{psicologa}'},
+};
+const VARS=['{paciente}','{fecha}','{hora}','{valor}','{modalidad}','{psicologa}'];
+const fillTpl=(t,c)=>t.replaceAll('{paciente}',c.paciente.split(' ')[0]).replaceAll('{fecha}',fmtLong(c.fecha))
+  .replaceAll('{hora}',c.hora).replaceAll('{valor}',money(c.valor)).replaceAll('{modalidad}',c.modalidad.toLowerCase()).replaceAll('{psicologa}',PSICOLOGA);
+
+/* ---------- Selectores de negocio ---------- */
+const sel = {
+  citasPagadas: () => state.citas.filter(c=>c.estado==='Confirmada' && c.pagado),
+  porCobrar: () => state.citas.filter(c=>c.estado==='Confirmada' && !c.pagado),
+  totalCitas: () => sel.citasPagadas().reduce((s,c)=>s+c.valor,0),
+  totalManual: () => state.ingresos.reduce((s,i)=>s+i.monto,0),
+  totalGastos: () => state.gastos.reduce((s,g)=>s+g.monto,0),
+  diario: () => { const a=Array(31).fill(0); sel.citasPagadas().forEach(c=>a[c.fecha.getDate()-1]+=c.valor); return a; },
+};
+
+/* =========================================================
+   COMPONENTE: Gráfica de línea (SVG, sin dependencias)
+   ========================================================= */
+function niceMax(m){ if(m<=0) return 1; const e=10**Math.floor(Math.log10(m)); for(const s of [1,1.5,2,2.5,3,4,5,6,8,10]) if(s*e>=m) return s*e; return 10*e; }
+function LineChart(el, opts){
+  let o = {height:240,color:'#3d7a6c',ref:null,refLabel:'',tipLabel:i=>'',...opts};
+  const uid = 'g'+Math.random().toString(36).slice(2,7);
+  function draw(){
+    const W = Math.max(el.clientWidth,280), H=o.height, p={t:16,r:16,b:28,l:52};
+    const vals=o.values, n=vals.length;
+    const valid=vals.map((v,i)=>[i,v]).filter(([,v])=>v!=null);
+    const max=niceMax(Math.max(...valid.map(([,v])=>v), o.ref||0)*1.08);
+    const x=i=>p.l+(n===1?0:i*(W-p.l-p.r)/(n-1));
+    const y=v=>p.t+(H-p.t-p.b)*(1-v/max);
+    let g='';
+    for(let k=0;k<=4;k++){const v=max*k/4,yy=y(v);g+=`<line x1="${p.l}" x2="${W-p.r}" y1="${yy}" y2="${yy}" stroke="var(--border)" ${k?'stroke-dasharray="2 4"':''}/><text x="${p.l-10}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--muted)">${short(v)}</text>`}
+    const step=Math.ceil(n/(W<480?6:10));
+    o.labels.forEach((l,i)=>{ if(i%step===0||i===n-1) g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">${l}</text>` });
+    const line=valid.map(([i,v],k)=>(k?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join(' ');
+    const area= valid.length? line+` L${x(valid.at(-1)[0])} ${y(0)} L${x(valid[0][0])} ${y(0)} Z`:'';
+    let ref='';
+    if(o.ref){const yr=y(o.ref);ref=`<line x1="${p.l}" x2="${W-p.r}" y1="${yr}" y2="${yr}" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <g transform="translate(${p.l+6},${yr-14})"><rect x="0" y="-9" width="${o.refLabel.length*6.2+14}" height="18" rx="9" fill="var(--warn-soft)"/><text x="7" y="4" text-anchor="start" font-size="11" font-weight="600" fill="var(--warn)">${o.refLabel}</text></g>`}
+    const r = n>16?2.6:3.6;
+    const pts=valid.map(([i,v])=>`<circle cx="${x(i)}" cy="${y(v)}" r="${r}" fill="#fff" stroke="${o.color}" stroke-width="2"/>`).join('');
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${o.aria||'Gráfica'}">
+      <defs><linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${o.color}" stop-opacity=".22"/><stop offset="1" stop-color="${o.color}" stop-opacity="0"/></linearGradient></defs>
+      ${g}<path d="${area}" fill="url(#${uid})"/>${ref}
+      <path d="${line}" fill="none" stroke="${o.color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>${pts}
+      <line class="hv" y1="${p.t}" y2="${H-p.b}" stroke="var(--border-strong)" stroke-dasharray="3 3" opacity="0"/>
+      <circle class="hp" r="6" fill="${o.color}" stroke="#fff" stroke-width="3" opacity="0"/>
+      <rect x="${p.l}" y="0" width="${W-p.l-p.r}" height="${H}" fill="transparent" class="ov"/></svg><div class="tip"></div>`;
+    const svg=$('svg',el), tip=$('.tip',el), hv=$('.hv',el), hp=$('.hp',el);
+    const move=e=>{
+      const b=svg.getBoundingClientRect(), mx=(e.touches?e.touches[0].clientX:e.clientX)-b.left;
+      let best=valid[0],bd=1e9; valid.forEach(pt=>{const d=Math.abs(x(pt[0])-mx); if(d<bd){bd=d;best=pt}});
+      if(!best) return; const [i,v]=best;
+      hv.setAttribute('x1',x(i));hv.setAttribute('x2',x(i));hv.setAttribute('opacity',1);
+      hp.setAttribute('cx',x(i));hp.setAttribute('cy',y(v));hp.setAttribute('opacity',1);
+      tip.innerHTML=`<small>${o.tipLabel(i)}</small><b>${money(v)}</b>`;
+      tip.style.left=Math.min(Math.max(x(i),70),W-70)+'px'; tip.style.top=y(v)+'px'; tip.style.opacity=1;
+    };
+    const leave=()=>{tip.style.opacity=0;hv.setAttribute('opacity',0);hp.setAttribute('opacity',0)};
+    const ov=$('.ov',el); ov.addEventListener('mousemove',move); ov.addEventListener('touchmove',move,{passive:true}); ov.addEventListener('mouseleave',leave);
+  }
+  let lastW=0; new ResizeObserver(()=>{ if(el.clientWidth && el.clientWidth!==lastW){ lastW=el.clientWidth; draw(); } }).observe(el);
+  return { update(n){ Object.assign(o,n); draw(); } };
+}
+
+/* =========================================================
+   COMPONENTE: Tabla con paginación (reutilizable)
+   ========================================================= */
+function DataTable(mount,{columns,rows,pageSize=8,empty='Sin resultados',onRender}){
+  let page=1;
+  function render(){
+    const data=rows(), pages=Math.max(1,Math.ceil(data.length/pageSize)); page=Math.min(page,pages);
+    const from=(page-1)*pageSize, slice=data.slice(from,from+pageSize);
+    const head=columns.map(c=>`<th class="${c.align==='right'?'r':''}">${c.label}</th>`).join('');
+    const body= slice.length ? slice.map(r=>`<tr>${columns.map(c=>`<td class="${c.align==='right'?'r':''}">${c.render(r)}</td>`).join('')}</tr>`).join('')
+      : `<tr><td colspan="${columns.length}" class="empty">${empty}</td></tr>`;
+    let nums=[]; for(let i=1;i<=pages;i++){ if(i===1||i===pages||Math.abs(i-page)<=1) nums.push(i); else if(nums.at(-1)!=='…') nums.push('…'); }
+    mount.innerHTML=`<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
+      <div class="pager"><span class="num">Mostrando ${data.length?from+1:0}–${Math.min(from+pageSize,data.length)} de ${data.length}</span>
+      <div class="pager-btns"><button data-p="${page-1}" ${page===1?'disabled':''} aria-label="Anterior">${ICON.left}</button>
+      ${nums.map(n=>n==='…'?'<span style="padding:0 4px">…</span>':`<button data-p="${n}" class="${n===page?'on':''}">${n}</button>`).join('')}
+      <button data-p="${page+1}" ${page===pages?'disabled':''} aria-label="Siguiente">${ICON.right}</button></div></div>`;
+    $$('.pager-btns button',mount).forEach(b=>b.onclick=()=>{page=+b.dataset.p;render()});
+    onRender && onRender(mount);
+  }
+  return {render, reset(){page=1;render()}};
+}
+
+/* =========================================================
+   MÓDULO FACTURACIÓN
+   ========================================================= */
+const Billing = (()=>{
+  let modeMes='acum', rango=6, filtroMov='todos', filtroIng='todos';
+  const days=[...Array(31)].map((_,i)=>String(i+1));
+  const chartMes = LineChart($('#chartMes'),{labels:days,values:[],color:'#3d7a6c',aria:'Ingresos del mes',tipLabel:i=>`${i+1} oct 2026`});
+  const chartProm = LineChart($('#chartProm'),{labels:[],values:[],color:'#4a6fa5',aria:'Promedio mensual'});
+
+  function kpis(){
+    const ing=sel.totalCitas()+sel.totalManual(), gas=sel.totalGastos(), net=ing-gas, pc=sel.porCobrar();
+    const prevIng=HIST.at(-1)+PREV_MANUAL, prevNet=prevIng-PREV_GASTOS;
+    const d=(a,b,inv)=>{const p=(a-b)/b*100, good=inv?p<=0:p>=0; return `<span class="delta ${good?'up':'down'}">${p>=0?ICON.up:ICON.down}${Math.abs(p).toFixed(1).replace('.',',')}%</span>`};
+    const card=(label,val,ico,bg,fg,foot)=>`<div class="card kpi"><div class="kpi-top"><span class="kpi-label">${label}</span><span class="kpi-ico" style="background:${bg};color:${fg}">${ico}</span></div><div class="kpi-value num">${val}</div><div class="kpi-foot">${foot}</div></div>`;
+    $('#kpis').innerHTML=
+      card('Ingresos del mes',money(ing),ICON.wallet,'var(--accent-soft)','var(--accent)',`${d(ing,prevIng)} vs. septiembre`)+
+      card('Gastos del mes',money(gas),ICON.out,'var(--danger-soft)','var(--danger)',`${d(gas,PREV_GASTOS,true)} vs. septiembre`)+
+      card('Utilidad neta',money(net),ICON.chart,'var(--info-soft)','var(--info)',`${d(net,prevNet)} · margen ${Math.round(net/ing*100)}%`)+
+      card('Por cobrar',money(pc.reduce((s,c)=>s+c.valor,0)),ICON.clock,'var(--warn-soft)','var(--warn)',`<a href="#" data-goto-pending style="color:var(--warn);font-weight:600">${pc.length} citas confirmadas sin pago →</a>`);
+    $('[data-goto-pending]').onclick=e=>{e.preventDefault();Citas.setFilter('pendientes');go('citas')};
+  }
+  function charts(){
+    const daily=sel.diario(); let acc=0;
+    const vals = modeMes==='acum' ? daily.map((v,i)=>i<TODAY?(acc+=v):null) : daily.map((v,i)=>i<TODAY?v:null);
+    const total=daily.reduce((a,b)=>a+b,0), dias=daily.filter(v=>v>0).length;
+    const ref = modeMes==='acum' ? HIST.at(-1) : Math.round(total/Math.max(dias,1));
+    chartMes.update({values:vals,ref,refLabel:modeMes==='acum'?'Sep: '+short(ref):'Prom. día: '+short(ref)});
+    $('#legRefMes').innerHTML=`<i class="dash"></i>${modeMes==='acum'?'Total mes anterior':'Promedio por día con ingresos'}`;
+    $('#statsMes').innerHTML=`<div><small>Cobrado en citas</small><b class="num">${money(total)}</b></div><div><small>Citas pagadas</small><b class="num">${sel.citasPagadas().length}</b></div><div><small>Ticket promedio</small><b class="num">${money(Math.round(total/Math.max(sel.citasPagadas().length,1)))}</b></div>`;
+
+    const serie=[...HIST,total].slice(-rango), labels=HIST_LABELS.slice(-rango);
+    const prom=Math.round(serie.reduce((a,b)=>a+b,0)/serie.length), best=Math.max(...serie);
+    chartProm.update({labels,values:serie,ref:prom,refLabel:'Prom: '+short(prom),tipLabel:i=>labels[i]+(i===serie.length-1?' (en curso)':'')});
+    $('#statsProm').innerHTML=`<div><small>Promedio ${rango===6?'6 meses':'12 meses'}</small><b class="num">${money(prom)}</b></div><div><small>Mejor mes</small><b class="num">${labels[serie.indexOf(best)]} · ${short(best)}</b></div>`;
+  }
+
+  // ---- Movimientos (resumen) ----
+  const movRows=()=>{
+    const ing=[...sel.citasPagadas().map(c=>({fecha:c.fecha,concepto:'Sesión · '+c.paciente,tipo:'Cita',metodo:c.metodo,monto:c.valor,dir:'in'})),
+               ...state.ingresos.map(i=>({fecha:i.fecha,concepto:i.concepto,tipo:'Ingreso manual',metodo:i.metodo,monto:i.monto,dir:'in'}))];
+    const gas=state.gastos.map(g=>({fecha:g.fecha,concepto:g.concepto,tipo:g.categoria,metodo:g.metodo,monto:g.monto,dir:'out'}));
+    const all = filtroMov==='ingreso'?ing : filtroMov==='gasto'?gas : [...ing,...gas];
+    return all.sort((a,b)=>b.fecha-a.fecha);
+  };
+  const tipoBadge=t=>t==='Cita'?'<span class="badge b-ok">Cita</span>':t==='Ingreso manual'?'<span class="badge b-info">Manual</span>':`<span class="badge b-off">${t}</span>`;
+  const tMov=DataTable($('#tblMov'),{pageSize:6,rows:movRows,columns:[
+    {label:'Fecha',render:r=>`<span class="cell-sub num">${fmtDate(r.fecha)}</span>`},
+    {label:'Concepto',render:r=>`<span class="cell-main">${r.concepto}</span>`},
+    {label:'Tipo',render:r=>r.dir==='out'?`<span class="badge b-danger">Gasto</span>`:tipoBadge(r.tipo)},
+    {label:'Método',render:r=>`<span class="cell-sub">${r.metodo}</span>`},
+    {label:'Monto',align:'right',render:r=>`<span class="num ${r.dir==='in'?'amount-in':'amount-out'}">${r.dir==='in'?'+':'−'} ${money(r.monto)}</span>`},
+  ]});
+
+  // ---- Ingresos ----
+  const ingRows=()=>{
+    const q=$('#qIng').value.toLowerCase();
+    let r=[...sel.citasPagadas().map(c=>({fecha:c.fecha,concepto:'Sesión de psicoterapia',detalle:c.paciente+' · '+c.modalidad,tipo:'Cita',metodo:c.metodo,monto:c.valor})),
+           ...state.ingresos.map(i=>({id:i.id,fecha:i.fecha,concepto:i.concepto,detalle:i.categoria,tipo:'Ingreso manual',metodo:i.metodo,monto:i.monto}))];
+    if(filtroIng==='citas') r=r.filter(x=>x.tipo==='Cita'); if(filtroIng==='manual') r=r.filter(x=>x.tipo!=='Cita');
+    if(q) r=r.filter(x=>(x.concepto+x.detalle).toLowerCase().includes(q));
+    return r.sort((a,b)=>b.fecha-a.fecha);
+  };
+  const tIng=DataTable($('#tblIng'),{pageSize:8,rows:ingRows,columns:[
+    {label:'Fecha',render:r=>`<span class="cell-sub num">${fmtDate(r.fecha)}</span>`},
+    {label:'Concepto',render:r=>`<div class="cell-main">${r.concepto}</div><div class="cell-sub">${r.detalle}</div>`},
+    {label:'Origen',render:r=>tipoBadge(r.tipo)},
+    {label:'Método',render:r=>`<span class="cell-sub">${r.metodo}</span>`},
+    {label:'Monto',align:'right',render:r=>`<span class="num amount-in">${money(r.monto)}</span>`},
+    {label:'',align:'right',render:r=>r.id?`<button class="icon-btn" title="Eliminar" data-del-ing="${r.id}">${ICON.trash}</button>`:''},
+  ],onRender:m=>$$('[data-del-ing]',m).forEach(b=>b.onclick=()=>{state.ingresos=state.ingresos.filter(i=>i.id!==b.dataset.delIng);refresh();toast('Ingreso eliminado')})});
+
+  // ---- Gastos ----
+  const gasRows=()=>{const q=$('#qGas').value.toLowerCase();return state.gastos.filter(g=>(g.concepto+g.categoria).toLowerCase().includes(q)).sort((a,b)=>b.fecha-a.fecha)};
+  const tGas=DataTable($('#tblGas'),{pageSize:7,rows:gasRows,columns:[
+    {label:'Fecha',render:r=>`<span class="cell-sub num">${fmtDate(r.fecha)}</span>`},
+    {label:'Concepto',render:r=>`<div class="cell-main">${r.concepto}</div><div class="cell-sub">${r.categoria}</div>`},
+    {label:'Método',render:r=>`<span class="cell-sub">${r.metodo}</span>`},
+    {label:'Monto',align:'right',render:r=>`<span class="num amount-out">${money(r.monto)}</span>`},
+    {label:'',align:'right',render:r=>`<button class="icon-btn" title="Eliminar" data-del-gas="${r.id}">${ICON.trash}</button>`},
+  ],onRender:m=>$$('[data-del-gas]',m).forEach(b=>b.onclick=()=>{state.gastos=state.gastos.filter(g=>g.id!==b.dataset.delGas);refresh();toast('Gasto eliminado')})});
+
+  function minis(){
+    const tc=sel.totalCitas(), tm=sel.totalManual(), tg=sel.totalGastos();
+    $('#miniIngresos').innerHTML=`<div class="card mini"><small>Total ingresos</small><b class="num">${money(tc+tm)}</b></div><div class="card mini"><small>Citas pagadas · ${sel.citasPagadas().length}</small><b class="num">${money(tc)}</b></div><div class="card mini"><small>Ingresos manuales · ${state.ingresos.length}</small><b class="num">${money(tm)}</b></div>`;
+    const cats={}; state.gastos.forEach(g=>cats[g.categoria]=(cats[g.categoria]||0)+g.monto);
+    const top=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+    $('#miniGastos').innerHTML=`<div class="card mini"><small>Total gastos</small><b class="num">${money(tg)}</b></div><div class="card mini"><small>Mayor categoría</small><b>${top[0]?top[0][0]:'—'}</b></div><div class="card mini"><small>% sobre ingresos</small><b class="num">${Math.round(tg/(tc+tm)*100)}%</b></div>`;
+    $('#catGastos').innerHTML= top.map(([k,v])=>`<div class="cat-row"><div class="cat-top"><span>${k}</span><span class="num">${money(v)}</span></div><div class="bar"><i style="width:${v/tg*100}%"></i></div></div>`).join('') || '<p class="hint">Aún no hay gastos.</p>';
+    const ci=sel.citasPagadas().length, mi=state.ingresos.length;
+    $('#chipsIng').innerHTML=[['todos','Todos',ci+mi],['citas','Citas',ci],['manual','Manuales',mi]].map(([v,l,c])=>`<button class="chip ${filtroIng===v?'on':''}" data-f="${v}">${l}<span class="c">${c}</span></button>`).join('');
+    $$('#chipsIng .chip').forEach(b=>b.onclick=()=>{filtroIng=b.dataset.f;minis();tIng.reset()});
+  }
+
+  function refresh(){ kpis(); charts(); minis(); tMov.render(); tIng.render(); tGas.render(); }
+
+  // eventos
+  $$('#segMes button').forEach(b=>b.onclick=()=>{$$('#segMes button').forEach(x=>x.classList.toggle('on',x===b));modeMes=b.dataset.v;charts()});
+  $$('#segProm button').forEach(b=>b.onclick=()=>{$$('#segProm button').forEach(x=>x.classList.toggle('on',x===b));rango=+b.dataset.v;charts()});
+  $$('#segMov button').forEach(b=>b.onclick=()=>{$$('#segMov button').forEach(x=>x.classList.toggle('on',x===b));filtroMov=b.dataset.v;tMov.reset()});
+  $('#qIng').oninput=()=>tIng.reset(); $('#qGas').oninput=()=>tGas.reset();
+
+  function setTab(t){
+    $$('#billTabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+    $$('[data-pane]').forEach(p=>p.style.display=p.dataset.pane===t?'flex':'none');
+    $$('#billingSub a').forEach(a=>a.classList.toggle('active',a.dataset.tab===t));
+    $('#billCrumb').textContent='Facturación · '+({resumen:'Resumen',ingresos:'Ingresos',gastos:'Gastos',pagos:'Pagos en línea'})[t];
+    window.dispatchEvent(new Event('resize'));
+  }
+  $$('#billTabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+  return {refresh,setTab};
+})();
+
+/* =========================================================
+   CITAS (estado de pago + recordatorio)
+   ========================================================= */
+const Citas = (()=>{
+  let filtro='todas';
+  const estadoBadge=e=>({'Confirmada':'<span class="badge b-ok">Confirmada</span>','Por confirmar':'<span class="badge b-info">Por confirmar</span>','Cancelada':'<span class="badge b-off">Cancelada</span>'})[e];
+  const rows=()=>{
+    const q=$('#qCit').value.toLowerCase();
+    return state.citas.filter(c=>{
+      if(q && !c.paciente.toLowerCase().includes(q)) return false;
+      if(filtro==='pendientes') return c.estado==='Confirmada'&&!c.pagado;
+      if(filtro==='pagadas') return c.pagado&&c.estado==='Confirmada';
+      if(filtro==='confirmar') return c.estado==='Por confirmar';
+      return true;
+    });
+  };
+  const t=DataTable($('#tblCit'),{pageSize:8,rows,empty:'No hay citas con este filtro',columns:[
+    {label:'Paciente',render:c=>`<div class="person"><div class="avatar">${initials(c.paciente)}</div><div><div class="cell-main">${c.paciente}</div><div class="cell-sub num">+57 ${c.tel.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3')}</div></div></div>`},
+    {label:'Fecha y hora',render:c=>`<div class="cell-main">${(t=>t[0].toUpperCase()+t.slice(1))(c.fecha.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}))}</div><div class="cell-sub num">${c.hora}</div>`},
+    {label:'Modalidad',render:c=>`<span class="cell-sub">${c.modalidad}</span>`},
+    {label:'Estado',render:c=>estadoBadge(c.estado)},
+    {label:'Valor',align:'right',render:c=>`<span class="num cell-main">${money(c.valor)}</span>`},
+    {label:'Pago',render:c=>{const en=c.estado==='Confirmada';
+      return `<div class="pay" title="${en?'':'Disponible cuando la cita esté confirmada'}"><label class="switch"><input type="checkbox" data-pay="${c.id}" ${c.pagado&&en?'checked':''} ${en?'':'disabled'} aria-label="Cita pagada"><span></span></label>
+      <span class="pay-label" style="color:${!en?'var(--muted)':c.pagado?'var(--success)':'var(--warn)'}">${!en?'—':c.pagado?'Pagada':'Pendiente'}</span></div>`}},
+    {label:'',align:'right',render:c=>{const can=c.estado==='Confirmada'&&!c.pagado;
+      return `<button class="btn btn-sm btn-wa" data-wa="${c.id}" ${can?'':'disabled'} title="${can?'Enviar recordatorio de pago':'Solo para citas confirmadas sin pago'}">${ICON.wa}Recordar pago</button>`}},
+  ],onRender:m=>{
+    $$('[data-pay]',m).forEach(i=>i.onchange=()=>{const c=state.citas.find(x=>x.id==i.dataset.pay);c.pagado=i.checked;refreshAll();toast(i.checked?'Cita marcada como pagada':'Cita marcada como pendiente')});
+    $$('[data-wa]',m).forEach(b=>b.onclick=()=>openWa(state.citas.find(x=>x.id==b.dataset.wa)));
+  }});
+  function chips(){
+    const n=f=>state.citas.filter(f).length;
+    const pend=n(c=>c.estado==='Confirmada'&&!c.pagado);
+    $('#chipsCit').innerHTML=[['todas','Todas',state.citas.length,''],['pendientes','Pendientes por pagar',pend,'warn'],['pagadas','Pagadas',n(c=>c.estado==='Confirmada'&&c.pagado),''],['confirmar','Por confirmar',n(c=>c.estado==='Por confirmar'),'']]
+      .map(([v,l,c,k])=>`<button class="chip ${k} ${filtro===v?'on':''}" data-f="${v}">${l}<span class="c">${c}</span></button>`).join('');
+    $$('#chipsCit .chip').forEach(b=>b.onclick=()=>{filtro=b.dataset.f;chips();t.reset()});
+    const pc=sel.porCobrar().reduce((s,c)=>s+c.valor,0);
+    $('#miniCitas').innerHTML=`<div class="card mini"><small>Citas del mes</small><b class="num">${state.citas.filter(c=>c.estado!=='Cancelada').length}</b></div><div class="card mini"><small>Cobrado</small><b class="num" style="color:var(--success)">${money(sel.totalCitas())}</b></div><div class="card mini"><small>Pendiente por cobrar · ${pend}</small><b class="num" style="color:var(--warn)">${money(pc)}</b></div>`;
+  }
+  $('#qCit').oninput=()=>t.reset();
+  return {render(){chips();t.render()}, setFilter(f){filtro=f;chips();t.reset()}};
+})();
+
+/* ---------- WhatsApp: envío ---------- */
+let waCita=null;
+function openWa(c){
+  waCita=c; $('#waTo').textContent=`Para ${c.paciente} · +57 ${c.tel}`;
+  $('#waMsg').value=fillTpl(state.templates.pago.texto,c); openModal('modalWa');
+}
+$('#waSend').onclick=()=>{ window.open(`https://wa.me/57${waCita.tel}?text=${encodeURIComponent($('#waMsg').value)}`,'_blank'); closeModals(); toast('Abriendo WhatsApp…'); };
+
+/* =========================================================
+   CONFIGURACIÓN › PLANTILLAS WHATSAPP
+   ========================================================= */
+const Templates = (()=>{
+  const sample={paciente:'Valentina Gómez',fecha:new Date(YEAR,MONTH,22),hora:'15:00',valor:160000,modalidad:'Presencial'};
+  function render(){
+    $('#tplList').innerHTML=`<div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span>Escribe tus mensajes una vez y úsalos con un clic desde el panel de citas. Las variables entre llaves se reemplazan con los datos de cada cita.</span></div>`+
+    Object.entries(state.templates).map(([k,tp])=>`
+      <div class="card">
+        <div class="card-h"><div><h3>${tp.titulo}</h3><p>${tp.desc}</p></div>${k==='pago'?'<span class="badge b-warn">Nuevo</span>':'<span class="badge b-ok">Activa</span>'}</div>
+        <div class="cfg-grid">
+          <div>
+            <div class="field" style="margin-bottom:0"><label for="tpl-${k}">Mensaje</label><textarea id="tpl-${k}" data-tpl="${k}">${tp.texto}</textarea></div>
+            <div class="vars">${VARS.map(v=>`<button class="var" data-ins="${k}" data-v="${v}">${v}</button>`).join('')}</div>
+            <p class="hint" style="margin-top:8px">Haz clic en una variable para insertarla donde está el cursor.</p>
+          </div>
+          <div>
+            <div class="field" style="margin-bottom:6px"><label>Vista previa</label></div>
+            <div class="phone"><div class="phone-h"><div class="avatar" style="width:24px;height:24px;font-size:10px">VG</div>Valentina Gómez</div><div class="bubble" id="pv-${k}"></div></div>
+          </div>
+        </div>
+        <div class="cfg-foot"><span class="hint" id="cnt-${k}"></span><div style="display:flex;gap:8px"><button class="btn" data-reset="${k}">Restablecer</button><button class="btn btn-primary" data-save="${k}">Guardar plantilla</button></div></div>
+      </div>`).join('');
+    Object.keys(state.templates).forEach(preview);
+    $$('[data-tpl]').forEach(ta=>ta.oninput=()=>preview(ta.dataset.tpl));
+    $$('[data-ins]').forEach(b=>b.onclick=()=>{const ta=$('#tpl-'+b.dataset.ins),s=ta.selectionStart;ta.setRangeText(b.dataset.v,s,ta.selectionEnd,'end');ta.focus();preview(b.dataset.ins)});
+    $$('[data-save]').forEach(b=>b.onclick=()=>{state.templates[b.dataset.save].texto=$('#tpl-'+b.dataset.save).value;toast('Plantilla guardada')});
+    $$('[data-reset]').forEach(b=>b.onclick=()=>{$('#tpl-'+b.dataset.reset).value=state.templates[b.dataset.reset].texto;preview(b.dataset.reset)});
+  }
+  function preview(k){const v=$('#tpl-'+k).value;$('#pv-'+k).innerHTML=fillTpl(v,sample).replace(/[<>]/g,'')+'<time>9:41</time>';$('#cnt-'+k).textContent=v.length+' caracteres'}
+  return {render};
+})();
+
+/* =========================================================
+   MODALES, FORMULARIOS Y ROUTER
+   ========================================================= */
+function openModal(id){$('#'+id).classList.add('open');setTimeout(()=>$('#'+id+' input, #'+id+' textarea')?.focus(),50)}
+function closeModals(){$$('.modal-bg').forEach(m=>m.classList.remove('open'))}
+$$('[data-open]').forEach(b=>b.onclick=()=>openModal(b.dataset.open));
+$$('[data-close]').forEach(b=>b.onclick=closeModals);
+$$('.modal-bg').forEach(m=>m.onclick=e=>{if(e.target===m)closeModals()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModals()});
+$$('.money input').forEach(i=>i.oninput=()=>{const n=i.value.replace(/\D/g,'');i.value=n?(+n).toLocaleString('es-CO'):''});
+$$('form[data-form]').forEach(f=>f.onsubmit=e=>{
+  e.preventDefault(); const d=Object.fromEntries(new FormData(f)); const [y,m,dd]=d.fecha.split('-').map(Number);
+  const item={id:(f.dataset.form[0])+Date.now(),concepto:d.concepto,categoria:d.categoria,fecha:new Date(y,m-1,dd),monto:+d.monto.replace(/\D/g,''),metodo:d.metodo};
+  (f.dataset.form==='gasto'?state.gastos:state.ingresos).unshift(item);
+  f.reset(); f.fecha.value='2026-10-24'; closeModals(); refreshAll();
+  toast(f.dataset.form==='gasto'?'Gasto registrado':'Ingreso registrado');
+});
+
+function refreshAll(){ Billing.refresh(); Citas.render(); }
+function go(route,tab){
+  $$('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===route));
+  $$('.nav > a').forEach(a=>a.classList.toggle('active',a.dataset.route===route));
+  $('#billingSub').style.display=route==='facturacion'?'':'none';
+  if(route==='facturacion') Billing.setTab(tab||'resumen');
+  window.scrollTo(0,0);
+}
+$$('[data-route]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.dataset.route,a.dataset.tab)});
+
+Templates.render(); refreshAll(); go('facturacion','resumen');
+</script>
+</body>
+</html>

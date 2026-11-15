@@ -23,14 +23,11 @@ class CalendarioController extends Controller
 
     public function index(): \Illuminate\View\View
     {
-        $user = \App\Models\User::first();
-
         return view('dashboard.calendario.index', [
             'modalidades' => Cita::MODALIDADES,
             'estados' => Cita::ESTADOS,
             'duracionPresencial' => $this->citaService->duracionPresencial(),
             'duracionOnline' => $this->citaService->duracionOnline(),
-            'psicologaNombre' => $user ? trim($user->nombre . ' ' . $user->apellidos) : 'tu psicóloga',
         ]);
     }
 
@@ -89,6 +86,7 @@ class CalendarioController extends Controller
                 'telefono'    => '',
                 'estado_key'  => null,
                 'url'         => null,
+                'whatsapp'    => null,
             ];
         })->all();
 
@@ -186,6 +184,7 @@ class CalendarioController extends Controller
             'estado_key'  => $cita->estado,
             'modalidad'   => $cita->modalidad_label,
             'url'         => route('dashboard.citas.show', $cita),
+            'whatsapp'    => whatsapp_confirmacion_url($cita),
         ];
     }
 }

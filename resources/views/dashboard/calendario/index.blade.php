@@ -364,7 +364,6 @@
             pacientesBuscarUrl: '{{ route('dashboard.pacientes.buscar') }}',
             duracionPresencial: {{ $duracionPresencial }},
             duracionOnline: {{ $duracionOnline }},
-            psicologa: @json($psicologaNombre),
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         };
     </script>

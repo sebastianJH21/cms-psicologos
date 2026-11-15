@@ -62,7 +62,27 @@
     flex-wrap: nowrap;
 }
 
+.form-field--switch-inline {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.3rem;
+    color: var(--color-text);
+}
+
 .cita-form { display: flex; flex-direction: column; gap: 2rem; }
+
+.cita-pago-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1.4rem;
+}
+
+.cita-pago-form .form-field {
+    flex: 1 1 16rem;
+}
 
 /* Modal de slots disponibles */
 .cita-slots-modal {
@@ -315,6 +335,16 @@
 .cita-badge--muted {
     background: var(--color-surface-soft);
     color: var(--color-text-muted);
+}
+
+.cita-badge--pago-pendiente {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+
+.cita-badge--pago-ok {
+    background: var(--color-success-soft);
+    color: var(--color-success);
 }
 
 /* ── Badge de estado clicable (toggle asíncrono) ───────────────────────────── */

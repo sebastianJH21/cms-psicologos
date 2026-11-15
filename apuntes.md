@@ -133,6 +133,7 @@ Salida esperada:
     - No me expliques nada, simplemente avisame cuando hayas terminado
 
 
+
 Como funciona el flujo de trabajo con el SDD y las fases de desarrollo:
 - Planificacion
 - Ejecutar prompt entre fases

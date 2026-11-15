@@ -17,6 +17,7 @@ class SidebarComposer
             ['type' => 'item', 'icon' => 'fa-house', 'label' => 'Inicio', 'route' => 'dashboard.home', 'match' => ['dashboard.home']],
             ['type' => 'item', 'icon' => 'fa-calendar-check', 'label' => 'Citas', 'route' => 'dashboard.citas.index', 'match' => ['dashboard.citas.*']],
             ['type' => 'item', 'icon' => 'fa-calendar-days', 'label' => 'Calendario', 'route' => 'dashboard.calendario.index', 'match' => ['dashboard.calendario.*']],
+            ['type' => 'item', 'icon' => 'fa-sack-dollar', 'label' => 'Facturación', 'route' => 'dashboard.facturacion.index', 'match' => ['dashboard.facturacion.*']],
             ['type' => 'item', 'icon' => 'fa-users', 'label' => 'Pacientes', 'route' => 'dashboard.pacientes.index', 'match' => ['dashboard.pacientes.*']],
             ['type' => 'item', 'icon' => 'fa-folder-open', 'label' => 'Historias', 'route' => 'dashboard.historias.index', 'match' => ['dashboard.historias.*', 'dashboard.pacientes.historias.*']],
             [
@@ -52,6 +53,7 @@ class SidebarComposer
                     ['label' => 'Disponibilidad', 'route' => 'dashboard.disponibilidad.edit', 'match' => ['dashboard.disponibilidad.*']],
                     ['label' => 'Protección de datos', 'route' => 'dashboard.configuracion.proteccion-datos.edit', 'match' => ['dashboard.configuracion.proteccion-datos.*']],
                     ['label' => 'Email y notificaciones', 'route' => 'dashboard.configuracion.email-notificaciones.edit', 'match' => ['dashboard.configuracion.email-notificaciones.*']],
+                    ['label' => 'Mensaje de WhatsApp', 'route' => 'dashboard.configuracion.whatsapp.edit', 'match' => ['dashboard.configuracion.whatsapp.*']],
                     ['label' => 'Redes sociales', 'route' => 'dashboard.configuracion.redes-sociales.edit', 'match' => ['dashboard.configuracion.redes-sociales.*']],
                     ['label' => 'General', 'route' => 'dashboard.configuracion.general.edit', 'match' => ['dashboard.configuracion.general.*']],
                 ],

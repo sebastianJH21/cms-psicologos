@@ -1,0 +1,703 @@
+/* ── Cabecera ──────────────────────────────────────────────────────────────── */
+.factu-topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.6rem;
+}
+
+.factu-crumb {
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.factu-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.factu-periodo-form {
+    display: inline-flex;
+}
+
+.factu-periodo-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding: 0.7rem 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    cursor: pointer;
+}
+
+.factu-periodo-label select {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.factu-periodo-label select:focus {
+    outline: none;
+}
+
+/* ── Pestañas ──────────────────────────────────────────────────────────────── */
+.factu-tabs {
+    display: flex;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+}
+
+.factu-tab {
+    padding: 1rem 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: none;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    cursor: pointer;
+}
+
+.factu-tab:hover {
+    color: var(--color-text);
+}
+
+.factu-tab.is-active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.factu-tag-soon {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999rem;
+    background: var(--color-surface-soft);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+.factu-pane {
+    display: none;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.factu-pane.is-active {
+    display: flex;
+}
+
+/* ── KPIs ──────────────────────────────────────────────────────────────────── */
+.factu-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.6rem;
+}
+
+.factu-kpi {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1.8rem 2rem;
+}
+
+.factu-kpi__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.factu-kpi__label {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.factu-kpi__ico {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.factu-kpi__ico--success { background: var(--color-success-soft); color: var(--color-success); }
+.factu-kpi__ico--danger  { background: var(--color-danger-soft);  color: var(--color-danger); }
+.factu-kpi__ico--info    { background: var(--color-info-soft);    color: var(--color-info); }
+.factu-kpi__ico--warning { background: var(--color-warning-soft); color: var(--color-warning); }
+
+.factu-kpi__value {
+    display: block;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02rem;
+    color: var(--color-text);
+}
+
+.factu-kpi__foot {
+    margin-top: 0.6rem;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.factu-kpi__link {
+    color: var(--color-warning);
+    font-weight: 600;
+}
+
+.factu-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 700;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999rem;
+    font-size: 1.1rem;
+}
+
+.factu-delta.is-up { color: var(--color-success); background: var(--color-success-soft); }
+.factu-delta.is-down { color: var(--color-danger); background: var(--color-danger-soft); }
+
+/* ── Segmented control (toggle de gráficos y filtros) ─────────────────────── */
+.factu-seg {
+    display: inline-flex;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    padding: 0.3rem;
+    gap: 0.2rem;
+    flex-shrink: 0;
+}
+
+.factu-seg__btn {
+    height: 2.8rem;
+    padding: 0 1.2rem;
+    border-radius: 0.6rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.factu-seg__btn.is-active {
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+}
+
+/* ── Tarjetas de gráficos ──────────────────────────────────────────────────── */
+.factu-charts-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.6rem;
+}
+
+.factu-chart-card .panel__header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.factu-chart-stats {
+    display: flex;
+    gap: 2.4rem;
+    flex-wrap: wrap;
+    margin: 1.4rem 0 0.4rem;
+}
+
+.factu-chart-stats div small {
+    display: block;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+}
+
+.factu-chart-stats div b {
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+/* ── Gráfico de línea en CSS + JavaScript (divs posicionados, sin SVG ni
+   canvas: el navegador solo compone capas CSS, sin motor de vectores) ── */
+.factu-linechart {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+.factu-lc-grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.factu-lc-grid--dashed {
+    border-top-style: dashed;
+}
+
+.factu-lc-axis-label {
+    position: absolute;
+    left: 0;
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    text-align: right;
+    transform: translateY(-50%);
+    white-space: nowrap;
+}
+
+.factu-lc-xlabel {
+    position: absolute;
+    bottom: 0;
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    transform: translateX(-50%);
+}
+
+.factu-lc-area {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--factu-chart-color) 0%, transparent 85%);
+    opacity: 0.22;
+}
+
+.factu-lc-segment {
+    position: absolute;
+    height: 2px;
+    background: var(--factu-chart-color);
+    border-radius: 2px;
+    transform-origin: 0 50%;
+}
+
+.factu-lc-point {
+    position: absolute;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid var(--factu-chart-color);
+    transform: translate(-50%, -50%);
+}
+
+.factu-lc-ref {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1.5px dashed var(--color-warning);
+}
+
+.factu-lc-ref-badge {
+    position: absolute;
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.1rem 0.7rem;
+    border-radius: 999rem;
+    white-space: nowrap;
+}
+
+.factu-lc-crosshair {
+    position: absolute;
+    top: 1.6rem;
+    bottom: 2.8rem;
+    width: 1px;
+    background: var(--color-border-strong);
+    opacity: 0;
+}
+
+.factu-lc-point--hover {
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--factu-chart-color);
+    border: 3px solid var(--color-surface);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.factu-lc-overlay {
+    position: absolute;
+    top: 0;
+    cursor: crosshair;
+}
+
+.factu-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--color-text);
+    color: var(--color-surface);
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: 1.2rem;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+    margin-top: -1.2rem;
+    opacity: 0;
+    transition: opacity 0.12s;
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+}
+
+.factu-tooltip strong {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.factu-tooltip small {
+    opacity: 0.75;
+}
+
+.factu-legend {
+    display: flex;
+    gap: 1.4rem;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    align-items: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.factu-legend i {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    vertical-align: -1px;
+    background: var(--color-primary);
+}
+
+.factu-legend i.is-info {
+    background: var(--color-info);
+}
+
+.factu-legend i.is-dash {
+    width: 1.4rem;
+    height: 0;
+    border-radius: 0;
+    border-top: 2px dashed var(--color-warning);
+    vertical-align: 2px;
+    background: none;
+}
+
+/* ── Pie de tabla: info + selector de tamaño + paginación ─────────────────── */
+.factu-tabla-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-top: 1.6rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.factu-tabla-footer__info {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+}
+
+.factu-tabla-footer__right {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+}
+
+.factu-pagesize {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+}
+
+.factu-pagesize select {
+    height: 3rem;
+    padding: 0 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* ── Paginador (mismo estilo que templates-ux/dashboard-facturacion.html) ─── */
+.factu-pager {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.factu-pager__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3rem;
+    height: 3rem;
+    padding: 0 0.8rem;
+    border-radius: 0.7rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.factu-pager__btn:hover:not(:disabled) {
+    background: var(--color-surface-soft);
+}
+
+.factu-pager__btn.is-active {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.factu-pager__btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.factu-pager__ellipsis {
+    padding: 0 0.4rem;
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+}
+
+/* ── Gastos por categoría: scroll a partir de la 7ª categoría, solo en
+   pantallas de 1180px o menos (ver @media (max-width: 1180px) más abajo) ── */
+.factu-cat-list {
+    padding-right: 0.6rem;
+}
+
+/* ── Toolbar con segmented control (últimos movimientos) ──────────────────── */
+.factu-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+.factu-monto {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.factu-monto--in { color: var(--color-success); }
+.factu-monto--out { color: var(--color-text); }
+
+.factu-right {
+    text-align: right;
+}
+
+/* ── Mini-stats (pestañas Ingresos / Gastos) ──────────────────────────────── */
+.factu-minis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.factu-mini {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1.6rem 2rem;
+}
+
+.factu-mini small {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+}
+
+.factu-mini strong {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0.4rem;
+    letter-spacing: -0.01rem;
+}
+
+/* ── Gastos por categoría ──────────────────────────────────────────────────── */
+.factu-grid-2 {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.6rem;
+}
+
+.factu-cat-row {
+    margin-bottom: 1.4rem;
+}
+
+.factu-cat-row:last-child {
+    margin-bottom: 0;
+}
+
+.factu-cat-row__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+}
+
+.factu-cat-row__top span:last-child {
+    font-weight: 600;
+}
+
+.factu-cat-row__bar {
+    height: 0.6rem;
+    background: var(--color-surface-soft);
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+
+.factu-cat-row__bar i {
+    display: block;
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 0.6rem;
+}
+
+/* ── Modales (gasto / ingreso) ────────────────────────────────────────────── */
+.factu-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.factu-money {
+    position: relative;
+}
+
+.factu-money__prefix {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+}
+
+.factu-money input {
+    padding-left: 2.6rem !important;
+}
+
+/* ── Próximamente: pagos en línea ─────────────────────────────────────────── */
+.factu-soon {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.2rem;
+    align-items: center;
+    padding: 2.4rem;
+}
+
+.factu-soon__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1.2rem 0 0.8rem;
+}
+
+.factu-soon__desc {
+    color: var(--color-text-muted);
+    max-width: 46rem;
+    line-height: 1.6;
+}
+
+.factu-soon__actions {
+    margin-top: 2rem;
+}
+
+.factu-soon__list {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+.factu-soon__list li {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    padding: 1.4rem;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-soft);
+}
+
+.factu-soon__list li i {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    font-size: 1.6rem;
+}
+
+.factu-soon__list li b {
+    font-size: 1.35rem;
+    display: block;
+}
+
+.factu-soon__list li small {
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 1180px) {
+    .factu-kpis { grid-template-columns: repeat(2, 1fr); }
+    .factu-charts-grid,
+    .factu-grid-2 { grid-template-columns: 1fr; }
+    .factu-cat-list { max-height: 21rem; overflow-y: auto; }
+}
+
+@media (max-width: 720px) {
+    .factu-topbar { flex-direction: column; align-items: stretch; }
+    .factu-topbar__actions { justify-content: stretch; }
+    .factu-soon { grid-template-columns: 1fr; padding: 1.6rem; }
+}
+
+@media (max-width: 560px) {
+    .factu-kpis,
+    .factu-minis,
+    .factu-modal-grid { grid-template-columns: 1fr; }
+}

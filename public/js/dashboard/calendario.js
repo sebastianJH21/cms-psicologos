@@ -511,19 +511,9 @@
 
         const waRow = document.getElementById('cal-d-whatsapp-row');
         const waLink = document.getElementById('cal-d-whatsapp');
-        const waDigits = (ev.telefono || '').replace(/\D/g, '');
         if (waRow && waLink) {
-            if (waDigits) {
-                const primerNombre = (ev.title || '').trim().split(' ')[0] || 'hola';
-                const partesFecha = (ev.date || '').split('-');
-                const fechaFmt = partesFecha.length === 3
-                    ? `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`
-                    : (ev.date || '');
-                const mensaje = `Hola ${primerNombre}, soy ${cfg.psicologa || 'tu psicóloga'}. `
-                    + `Te escribo para confirmar tu cita ${ev.modalidad || ''} `
-                    + `del ${fechaFmt} a las ${ev.start || ''}. `
-                    + `¿Me confirmas que podrás asistir? ¡Gracias!`;
-                waLink.href = `https://wa.me/${waDigits}?text=${encodeURIComponent(mensaje)}`;
+            if (ev.whatsapp) {
+                waLink.href = ev.whatsapp;
                 waRow.hidden = false;
             } else {
                 waRow.hidden = true;

@@ -14,9 +14,13 @@ use App\Http\Controllers\Dashboard\Configuracion\RedesSocialesController;
 use App\Http\Controllers\Dashboard\Configuracion\PlanController;
 use App\Http\Controllers\Dashboard\Configuracion\ServicioController;
 use App\Http\Controllers\Dashboard\Configuracion\TerapiaController;
+use App\Http\Controllers\Dashboard\Configuracion\WhatsappController;
 use App\Http\Controllers\Dashboard\DisponibilidadController;
 use App\Http\Controllers\Dashboard\PeriodoVacacionesController;
 use App\Http\Controllers\Dashboard\EventoController;
+use App\Http\Controllers\Dashboard\Facturacion\FacturacionController;
+use App\Http\Controllers\Dashboard\Facturacion\GastoController;
+use App\Http\Controllers\Dashboard\Facturacion\IngresoManualController;
 use App\Http\Controllers\Dashboard\FaqController;
 use App\Http\Controllers\Dashboard\HistoriaController;
 use App\Http\Controllers\Dashboard\HomeController as DashboardHomeController;
@@ -115,6 +119,7 @@ Route::middleware('installed')->group(function () {
         Route::delete('disponibilidad/periodos-vacaciones/{periodo}', [PeriodoVacacionesController::class, 'destroy'])->name('periodos-vacaciones.destroy');
 
         Route::patch('citas/{cita}/estado', [CitaController::class, 'cambiarEstado'])->name('citas.estado');
+        Route::patch('citas/{cita}/pago', [CitaController::class, 'marcarPago'])->name('citas.pago');
         Route::resource('citas', CitaController::class)->parameters(['citas' => 'cita']);
 
         Route::get('calendario', [CalendarioController::class, 'index'])->name('calendario.index');
@@ -124,6 +129,12 @@ Route::middleware('installed')->group(function () {
         Route::post('calendario/eventos-extra', [EventoController::class, 'store'])->name('calendario.eventos-extra.store');
         Route::patch('calendario/eventos-extra/{evento}', [EventoController::class, 'update'])->name('calendario.eventos-extra.update');
         Route::delete('calendario/eventos-extra/{evento}', [EventoController::class, 'destroy'])->name('calendario.eventos-extra.destroy');
+
+        Route::prefix('facturacion')->name('facturacion.')->group(function () {
+            Route::get('/', [FacturacionController::class, 'index'])->name('index');
+            Route::resource('gastos', GastoController::class)->parameters(['gastos' => 'gasto'])->only(['store', 'destroy']);
+            Route::resource('ingresos', IngresoManualController::class)->parameters(['ingresos' => 'ingreso'])->only(['store', 'destroy']);
+        });
 
         Route::get('historias', [HistoriaController::class, 'indexGeneral'])->name('historias.index');
 
@@ -177,6 +188,9 @@ Route::middleware('installed')->group(function () {
 
             Route::get('email-notificaciones', [EmailNotificacionesController::class, 'edit'])->name('email-notificaciones.edit');
             Route::put('email-notificaciones', [EmailNotificacionesController::class, 'update'])->name('email-notificaciones.update');
+
+            Route::get('whatsapp', [WhatsappController::class, 'edit'])->name('whatsapp.edit');
+            Route::put('whatsapp', [WhatsappController::class, 'update'])->name('whatsapp.update');
 
             Route::resource('servicios', ServicioController::class)->parameters(['servicios' => 'servicio']);
             Route::resource('terapias', TerapiaController::class)->parameters(['terapias' => 'terapia']);

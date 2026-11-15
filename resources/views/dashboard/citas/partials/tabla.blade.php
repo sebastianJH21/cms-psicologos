@@ -18,6 +18,7 @@
                     <th scope="col">Teléfono</th>
                     <th scope="col">Modalidad</th>
                     <th scope="col">Estado</th>
+                    <th scope="col">Pago</th>
                     <th scope="col" class="data-table__actions">Acciones</th>
                 </tr>
             </thead>
@@ -50,6 +51,11 @@
                                         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Mensaje confirmación
                                     </a>
                                 @endif
+                                @if ($cita->puede_marcarse_pagada && !$cita->pagado && ($waPagoRow = whatsapp_recordatorio_pago_url($cita)))
+                                    <a href="{{ $waPagoRow }}" target="_blank" rel="noopener" class="cita-badge cita-badge--wa" title="Enviar recordatorio de pago por WhatsApp">
+                                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Recordar pago
+                                    </a>
+                                @endif
                             </div>
                         </td>
                         <td>
@@ -59,6 +65,19 @@
                         </td>
                         <td>
                             @include('dashboard.citas.partials.estado-badge', ['cita' => $cita, 'pair' => ['pendiente', 'confirmada']])
+                        </td>
+                        <td>
+                            @if (!$cita->puede_marcarse_pagada)
+                                <span class="cita-badge cita-badge--muted">—</span>
+                            @elseif ($cita->pagado)
+                                <span class="cita-badge cita-badge--pago-ok" title="Pagada el {{ $cita->pagado_at?->format('d/m/Y') }}">
+                                    <i class="fa-solid fa-check" aria-hidden="true"></i> Pagada
+                                </span>
+                            @else
+                                <span class="cita-badge cita-badge--pago-pendiente">
+                                    <i class="fa-solid fa-clock" aria-hidden="true"></i> Pendiente
+                                </span>
+                            @endif
                         </td>
                         <td class="data-table__actions">
                             <a href="{{ route('dashboard.citas.show', $cita) }}" class="btn btn--icon" aria-label="Ver detalle">

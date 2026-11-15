@@ -49,22 +49,14 @@ if (!function_exists('phrase')) {
 if (!function_exists('whatsapp_confirmacion_url')) {
     function whatsapp_confirmacion_url(\App\Models\Cita $cita): ?string
     {
-        $telefono = preg_replace('/\D+/', '', (string) $cita->paciente_telefono);
-        if ($telefono === '' || $telefono === null) {
-            return null;
-        }
+        return app(\App\Services\WhatsappService::class)->urlConfirmacion($cita);
+    }
+}
 
-        $user = \App\Models\User::first();
-        $psicologa = $user ? trim($user->nombre . ' ' . $user->apellidos) : 'tu psicóloga';
-        $nombre = trim((string) ($cita->paciente_nombre ?? '')) ?: 'hola';
-        $primerNombre = explode(' ', $nombre)[0] ?: $nombre;
-
-        $mensaje = "Hola {$primerNombre}, soy {$psicologa}. "
-            . "Te escribo para confirmar tu cita {$cita->modalidad_label} "
-            . "del {$cita->fecha_inicio->format('d/m/Y')} a las {$cita->fecha_inicio->format('H:i')}. "
-            . "¿Me confirmas que podrás asistir? ¡Gracias!";
-
-        return 'https://wa.me/' . $telefono . '?text=' . rawurlencode($mensaje);
+if (!function_exists('whatsapp_recordatorio_pago_url')) {
+    function whatsapp_recordatorio_pago_url(\App\Models\Cita $cita): ?string
+    {
+        return app(\App\Services\WhatsappService::class)->urlRecordatorioPago($cita);
     }
 }
 
